@@ -2,9 +2,11 @@ package com.example.zxt
 
 import android.graphics.Color
 import android.graphics.DashPathEffect
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.be.base.easy.EasyAdapter
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -14,15 +16,16 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.ArrayList
+import kotlinx.android.synthetic.main.item_msg.view.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
-
+    lateinit var easyAdapter : EasyAdapter<String>
+    var mList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
             // axis range
             yAxis.axisMaximum = 200f
-            yAxis.axisMinimum = -50f
+            yAxis.axisMinimum = 0f
         }
 
 
@@ -125,6 +128,26 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
         // draw legend entries as lines
         l.form = Legend.LegendForm.LINE
+
+
+
+        recycleView.layoutManager = LinearLayoutManager(this)
+        easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
+            itmeView.tvContent.text = "报警${position}号"
+        }, emptyList())
+        mList.add("1")
+        mList.add("1")
+        mList.add("1")
+        mList.add("1")
+        mList.add("1")
+        mList.add("1")
+        mList.add("1")
+        recycleView.adapter = easyAdapter
+        easyAdapter.submitList(mList)
+
+
+
+
     }
 
     private fun setData(count: Int, range: Float) {
