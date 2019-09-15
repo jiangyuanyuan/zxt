@@ -7,6 +7,7 @@ import android.view.View
 import android.view.WindowManager
 import com.example.zxt.R
 import com.tezwez.base.helper.loadFromUrl
+
 import kotlinx.android.synthetic.main.dialog_one_text.*
 
 class ErrorDialog
@@ -90,7 +91,7 @@ private constructor(builder: Builder, context: Context) :
      */
     private fun initData() {
         //
-        image.loadFromUrl(messageStr)
+        mImage.loadFromUrl(messageStr)
 //        image.loadFromUrl()
     }
 }

@@ -55,35 +55,35 @@ private val interceptor: Interceptor
             .addHeader("Content-Type", "application/json")
             .addHeader("charset","UTF-8")
 
-        val token = Hawk.get<String>(KEY_TOKEN)
-        if (token != null){
-            builder.addHeader("Authorization", token)
-        }
-//            builder.addHeader("lang", getLang())
-        builder.addHeader("deviceId", DEVICE_ID)
+//        val token = Hawk.get<String>(KEY_TOKEN)
+//        if (token != null){
+//            builder.addHeader("Authorization", token)
+//        }
+////            builder.addHeader("lang", getLang())
+//        builder.addHeader("deviceId", DEVICE_ID)
 
         val response = chain.proceed(builder.build())
         val bytes = response?.body()?.bytes() ?: ""?.toByteArray()
         val build = response.newBuilder()
             .body(ResponseBody.create(MediaType.parse("UTF-8"), bytes)).build()
-        var responseCode = ""
-        var responseMsg = ""
-        try {
-            if (bytes!=null){
-                val returnData = JsonParser()?.parse(String(bytes))?.asJsonObject
-                responseCode = returnData?.get("errcode")?.asString?:"10000"
-                responseMsg = returnData?.get("errmsg")?.asString?:"server error"
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }finally {
-            //交给上层显示错误
-            if(responseCode?.isNotBlank()&&responseCode?.toInt() !=COMMON_SUC_CODE){
-                ErrorNotice.INSTANCE.notifyError(responseCode?.toInt(),responseMsg)
-            }else {
-
-            }
-        }
+//        var responseCode = ""
+//        var responseMsg = ""
+//        try {
+//            if (bytes!=null){
+//                val returnData = JsonParser()?.parse(String(bytes))?.asJsonObject
+//                responseCode = returnData?.get("errcode")?.asString?:"10000"
+//                responseMsg = returnData?.get("errmsg")?.asString?:"server error"
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }finally {
+//            //交给上层显示错误
+//            if(responseCode?.isNotBlank()&&responseCode?.toInt() !=COMMON_SUC_CODE){
+//                ErrorNotice.INSTANCE.notifyError(responseCode?.toInt(),responseMsg)
+//            }else {
+//
+//            }
+//        }
         build
     }
 private fun initLogInterceptor(): HttpLoggingInterceptor {
