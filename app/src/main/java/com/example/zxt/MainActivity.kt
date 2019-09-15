@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
 import com.be.base.view.ErrorDialog
+import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -56,7 +57,8 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initTu()
+        initTu(chart)
+        initTu(chart2)
         recycleView.layoutManager = LinearLayoutManager(this)
         easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
             itmeView.tvContent.text = "警告原因：${item.alarmReason}"
@@ -73,7 +75,13 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
 
         mApiViewModel.getListByTime(30).observe(this,androidx.lifecycle.Observer {
             if(it.isEmpty().not()) {
-                setData(it)
+                setData(chart,it)
+            }
+        })
+
+        mApiViewModel.getListByTime(90).observe(this,androidx.lifecycle.Observer {
+            if(it.isEmpty().not()) {
+                setData(chart2,it)
             }
         })
 
@@ -102,36 +110,36 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
             easyAdapter.submitList(mList)
         })
     }
-    private fun initTu() {
+    private fun initTu(lineChart : LineChart) {
         // background color
-        chart.setBackgroundColor(Color.WHITE)
+        lineChart.setBackgroundColor(Color.WHITE)
         // disable description text
-        chart.getDescription().setEnabled(false)
+        lineChart.getDescription().setEnabled(false)
         // enable touch gestures
-        chart.setTouchEnabled(true)
+        lineChart.setTouchEnabled(true)
         // set listeners
-        chart.setOnChartValueSelectedListener(this)
-        chart.setDrawGridBackground(false)
+        lineChart.setOnChartValueSelectedListener(this)
+        lineChart.setDrawGridBackground(false)
         // create marker to display box when values are selected
         val mv = MyMarkerView(this, R.layout.custom_marker_view)
 
-        // Set the marker to the chart
-        mv.setChartView(chart)
-        chart.marker = mv
+        // Set the marker to the lineChart
+        mv.setChartView(lineChart)
+        lineChart.marker = mv
 
         // enable scaling and dragging
-        chart.isDragEnabled = true
-        chart.setScaleEnabled(true)
-        // chart.setScaleXEnabled(true);
-        // chart.setScaleYEnabled(true);
+        lineChart.isDragEnabled = true
+        lineChart.setScaleEnabled(true)
+        // lineChart.setScaleXEnabled(true);
+        // lineChart.setScaleYEnabled(true);
 
         // force pinch zoom along both axis
-        chart.setPinchZoom(true)
+        lineChart.setPinchZoom(true)
 
         val xAxis: XAxis
         run {
             // // MyData-Axis Style // //
-            xAxis = chart.xAxis
+            xAxis = lineChart.xAxis
 
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f)
@@ -140,10 +148,10 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         val yAxis: YAxis
         run {
             // // Y-Axis Style // //
-            yAxis = chart.axisLeft
+            yAxis = lineChart.axisLeft
 
             // disable dual axis (only use LEFT axis)
-            chart.axisRight.isEnabled = false
+            lineChart.axisRight.isEnabled = false
 
             // horizontal grid lines
             yAxis.enableGridDashedLine(10f, 10f, 0f)
@@ -193,17 +201,18 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
 //        setData(45, 180f)
 
         // draw points over time
-        chart.animateX(1500)
+        lineChart.animateX(1500)
 
         // get the legend (only possible after setting data)
-        val l = chart.legend
+        val l = lineChart.legend
 
         // draw legend entries as lines
         l.form = Legend.LegendForm.LINE
 
 
     }
-    private fun setData(list : List<CountBean>) {
+
+    private fun setData(lineChart : LineChart,list : List<CountBean>) {
         val values = ArrayList<Entry>()
         for (i in 0 until list.size) {
             var data = list.get(i)
@@ -213,12 +222,12 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
 
         val set1: LineDataSet
 
-        if (chart.data != null && chart.data.dataSetCount > 0) {
-            set1 = chart.data.getDataSetByIndex(0) as LineDataSet
+        if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
+            set1 = lineChart.data.getDataSetByIndex(0) as LineDataSet
             set1.values = values
             set1.notifyDataSetChanged()
-            chart.data.notifyDataChanged()
-            chart.notifyDataSetChanged()
+            lineChart.data.notifyDataChanged()
+            lineChart.notifyDataSetChanged()
         } else {
             // create a dataset and give it a type
             set1 = LineDataSet(values, "DataSet 1")
@@ -253,7 +262,7 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
             // set the filled area
             set1.setDrawFilled(true)
             set1.fillFormatter =
-                IFillFormatter { dataSet, dataProvider -> chart.axisLeft.axisMinimum }
+                IFillFormatter { dataSet, dataProvider -> lineChart.axisLeft.axisMinimum }
 
             // set color of filled area
             if (Utils.getSDKInt() >= 18) {
@@ -271,7 +280,7 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
             val data = LineData(dataSets)
 
             // set data
-            chart.data = data
+            lineChart.data = data
         }
     }
     override fun onNothingSelected() {

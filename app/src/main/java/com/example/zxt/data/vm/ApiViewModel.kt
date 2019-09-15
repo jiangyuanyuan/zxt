@@ -14,6 +14,7 @@ class ApiViewModel(private val api: Api) : ViewModel() {
     val getList = MutableLiveData<DataInfo>()
 
     val getCount = MutableLiveData<List<CountBean>>()
+    val getCountHistory = MutableLiveData<List<CountBean>>()
 
     /**
      * 获取列表接口
@@ -46,6 +47,19 @@ class ApiViewModel(private val api: Api) : ViewModel() {
         api.getListByTime(req).compose(applySchedulersOnSingle())
             .subscribe(DataObserver(getCount))
         return getCount
+    }
+
+
+    fun getListByTimeHistory(
+        timeNumber: Int? = null
+    ): LiveData<List<CountBean>> = let {
+        val req = Req()
+        if (timeNumber != null)
+            req.putParams("timeNumber", timeNumber)
+        req.putParams("sortType",1.toString())
+        api.getListByTime(req).compose(applySchedulersOnSingle())
+            .subscribe(DataObserver(getCountHistory))
+        return getCountHistory
     }
 
 
