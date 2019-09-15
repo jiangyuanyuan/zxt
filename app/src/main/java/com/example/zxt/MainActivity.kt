@@ -26,6 +26,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
 import com.tezwez.base.common.BaseActivity
 import com.tezwez.base.helper.click
+import com.tezwez.base.helper.loadFromUrl
 import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.MyData
 import com.tezwez.club.data.vm.ApiViewModel
@@ -62,6 +63,25 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         recycleView.layoutManager = LinearLayoutManager(this)
         easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
             itmeView.tvContent.text = "警告原因：${item.alarmReason}"
+//            itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+//            itmeView.tvTime = item.alarmTime
+            when(item.pictureType){
+                "0"->{
+                    itmeView.tvType.text = "一级警告"
+                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+                    itmeView.tvType.setTextColor(resources.getColor(R.color.red))
+                }
+                "1"->{
+                    itmeView.tvType.text = "二级警告"
+                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+                    itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
+                }
+                "2"->{
+                    itmeView.tvType.text = "三级警告"
+                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+                    itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
+                }
+            }
             itmeView.click {
 //                toast("${item.alarmPictureName}")
                 showDialog(item.alarmPictureName)

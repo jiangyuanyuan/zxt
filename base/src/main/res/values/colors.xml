@@ -100,4 +100,6 @@
     <color name="color_FFF000">#FFF000</color>
 
     <color name="color_333333">#333333</color>
+    <color name="color_666666">#666666</color>
+    <color name="red">#ffff0000</color>
 </resources>
