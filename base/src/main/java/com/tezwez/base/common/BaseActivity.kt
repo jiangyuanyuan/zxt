@@ -9,6 +9,7 @@ import android.view.WindowManager
 import kotlinx.android.synthetic.main.head_layout.*
 import me.yokeyword.fragmentation.SupportActivity
 import me.yokeyword.fragmentation.anim.DefaultNoAnimator
+import org.jetbrains.anko.toast
 
 
 open class BaseActivity : SupportActivity()  {
@@ -46,6 +47,26 @@ open class BaseActivity : SupportActivity()  {
 //            statusBarColor = Color.TRANSPARENT
 //            addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
+    }
+
+    override fun onBackPressedSupport() {
+        if (exit())return
+        super.onBackPressedSupport()
+
+    }
+
+    var exitTime:Long =0
+    private fun exit():Boolean{
+        if((System.currentTimeMillis()-exitTime)>2000){
+            toast("再按一次退出程序")
+            exitTime=System.currentTimeMillis()
+            return true
+        } else{
+            pop()
+            System.exit(0)
+        }
+        return false
+
     }
 
 

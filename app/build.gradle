@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -41,8 +43,11 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.android.support:recyclerview-v7:23.4.0'
-    implementation 'com.android.support:multidex:1.0.3'
     implementation project(path: ':base')
+
+
+    //权限
+    implementation rootProject.ext.permissionsdispatcher
+    kapt rootProject.ext.permissionsdispatcherprocessor
 
 }

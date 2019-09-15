@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
 import com.be.base.view.ErrorDialog
+import com.example.zxt.DateUtils.datePattern
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
@@ -28,6 +29,7 @@ import com.github.mikephil.charting.utils.Utils
 import com.tezwez.base.common.BaseActivity
 import com.tezwez.base.helper.click
 import com.tezwez.base.helper.loadFromUrl
+import com.tezwez.base.helper.loge
 import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.MyData
 import com.tezwez.club.data.vm.ApiViewModel
@@ -42,7 +44,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity(), OnChartValueSelectedListener {
+class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     lateinit var easyAdapter : EasyAdapter<MyData>
     var mList = mutableListOf<MyData>()
     val mApiViewModel: ApiViewModel by viewModel()
@@ -66,7 +68,9 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
             itmeView.tvContent.text = "警告原因：${item.alarmReason}"
 //            itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
-//            itmeView.tvTime = item.alarmTime
+            itmeView.tvTime.text = DateUtils.convertTimeToString(item.alarmTime,datePattern)
+            loge(item.alarmTime?.toString())
+            loge(DateUtils.convertTimeToString(item.alarmTime,datePattern))
             when(item.pictureType){
                 "0"->{
                     itmeView.tvType.text = "一级警告"
