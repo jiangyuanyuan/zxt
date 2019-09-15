@@ -105,7 +105,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         })
 
-        mApiViewModel.getListByTime(90).observe(this,androidx.lifecycle.Observer {
+        mApiViewModel.getListByTimeHistory(90).observe(this,androidx.lifecycle.Observer {
             if(it.isEmpty().not()) {
                 setData(chart2,it)
             }

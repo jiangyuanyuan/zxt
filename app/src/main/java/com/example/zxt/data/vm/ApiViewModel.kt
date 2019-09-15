@@ -50,6 +50,7 @@ class ApiViewModel(private val api: Api) : ViewModel() {
     }
 
 
+
     fun getListByTimeHistory(
         timeNumber: Int? = null
     ): LiveData<List<CountBean>> = let {
