@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
+    android:paddingTop="30dp"
     tools:context=".MainActivity">
 
 <androidx.core.widget.NestedScrollView
@@ -21,6 +22,7 @@
             android:text="近30 天数据"
             android:textSize="30sp"
             android:gravity="center"
+            android:textColor="@color/color_333333"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -71,6 +73,7 @@
         <TextView
             android:text="历史数据"
             android:textSize="30sp"
+            android:textColor="@color/color_333333"
             android:gravity="center"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"

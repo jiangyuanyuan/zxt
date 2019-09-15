@@ -90,7 +90,7 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
 
 
     fun getDataInfo(){
-        mApiViewModel.getList(pageNum,2).observe(this,androidx.lifecycle.Observer {
+        mApiViewModel.getList(pageNum,10).observe(this,androidx.lifecycle.Observer {
 
             if(it !=null) {
                 hasNextPage = it.hasNextPage
