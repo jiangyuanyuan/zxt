@@ -37,3 +37,8 @@ data class MyData(
     val pictureType: String,
     val sensorid: String
 )
+
+data class CountBean(
+    val day: String,
+    val sum: Int
+)

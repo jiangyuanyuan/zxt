@@ -25,6 +25,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
 import com.tezwez.base.common.BaseActivity
 import com.tezwez.base.helper.click
+import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.MyData
 import com.tezwez.club.data.vm.ApiViewModel
 import io.reactivex.Observable
@@ -70,24 +71,10 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         initReceiver()
         //image.loadFromUrl("https://dpic.tiankong.com/00/x7/QJ6331726352.jpg?x-oss-process=style/794ws")
 
-        mApiViewModel.getListByTime(pageNum,2).observe(this,androidx.lifecycle.Observer {
-
-            if(it !=null) {
-                hasNextPage = it.hasNextPage
-                hasPreviousPage = it.hasPreviousPage
-                lastPage = it.lastPage?.toInt()
-                if(!it.list.isEmpty()) {
-                    if(BigDecimal(it.list?.get(0)?.id) > newest) {
-                        if(isAuto == true){
-                            showDialog(it.list?.get(0)?.alarmPictureName)
-                        }
-                        newest = BigDecimal(it.list?.get(0)?.id)
-                    }
-                    mList.clear()
-                    mList.addAll(it?.list)
-                }
+        mApiViewModel.getListByTime(30).observe(this,androidx.lifecycle.Observer {
+            if(it.isEmpty().not()) {
+                setData(it)
             }
-            easyAdapter.submitList(mList)
         })
 
     }
@@ -203,7 +190,7 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         // add data
 //        seekBarX.setProgress(45)
 //        seekBarY.setProgress(180)
-        setData(45, 180f)
+//        setData(45, 180f)
 
         // draw points over time
         chart.animateX(1500)
@@ -216,14 +203,12 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
 
 
     }
-    private fun setData(count: Int, range: Float) {
-
+    private fun setData(list : List<CountBean>) {
         val values = ArrayList<Entry>()
-
-        for (i in 0 until count) {
-
-            val `val` = (Math.random() * range).toFloat() - 30
-            values.add(Entry(i.toFloat(), `val`, resources.getDrawable(R.drawable.star)))
+        for (i in 0 until list.size) {
+            var data = list.get(i)
+            var sum = data.sum.toFloat()
+            values.add(Entry(i.toFloat(), sum, resources.getDrawable(R.drawable.star)))
         }
 
         val set1: LineDataSet

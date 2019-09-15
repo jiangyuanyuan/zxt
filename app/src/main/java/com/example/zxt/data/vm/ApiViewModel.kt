@@ -7,10 +7,13 @@ import com.example.zxt.data.api.DataObserver
 import com.tezwez.base.helper.applySchedulersOnSingle
 import com.tezwez.base.net.dto.Req
 import com.tezwez.club.data.api.Api
+import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.DataInfo
 
 class ApiViewModel(private val api: Api) : ViewModel() {
     val getList = MutableLiveData<DataInfo>()
+
+    val getCount = MutableLiveData<List<CountBean>>()
 
     /**
      * 获取列表接口
@@ -34,18 +37,15 @@ class ApiViewModel(private val api: Api) : ViewModel() {
      * 获取列表接口
      */
     fun getListByTime(
-        pageNum: Int? = null,
-        pageSize: Int? = null
-    ): LiveData<DataInfo> = let {
+        timeNumber: Int? = null
+    ): LiveData<List<CountBean>> = let {
         val req = Req()
-        if (pageNum != null)
-            req.putParams("pageNum", pageNum.toString())
-        if (pageSize != null)
-            req.putParams("pageSize", pageSize.toString())
-        req.putParams("sortType",0.toString())
+        if (timeNumber != null)
+            req.putParams("timeNumber", timeNumber)
+        req.putParams("sortType",1.toString())
         api.getListByTime(req).compose(applySchedulersOnSingle())
-            .subscribe(DataObserver(getList))
-        return getList
+            .subscribe(DataObserver(getCount))
+        return getCount
     }
 
 
