@@ -10,9 +10,12 @@ import retrofit2.http.POST
 
 interface Api {
     /**
-     * 换一批 名师推荐列表
+     * 获取列表
      */
     @POST("/mall/alarmMsg/getList.do")
     fun getList(@Body req: Req): Single<Rep<DataInfo>>
+
+    @POST("/mall/alarmMsg/getListByTime.do")
+    fun getListByTime(@Body req: Req): Single<Rep<DataInfo>>
 
 }

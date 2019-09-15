@@ -1,11 +1,16 @@
 package com.example.zxt
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
+import com.be.base.view.ErrorDialog
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -22,11 +27,15 @@ import com.tezwez.base.common.BaseActivity
 import com.tezwez.base.helper.click
 import com.tezwez.club.data.dto.MyData
 import com.tezwez.club.data.vm.ApiViewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_msg.view.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.math.BigDecimal
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity(), OnChartValueSelectedListener {
     lateinit var easyAdapter : EasyAdapter<MyData>
@@ -35,9 +44,12 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
     var pageNum = 1
 
     var hasNextPage: Boolean ?= true
+    var isAuto: Boolean ?= false //自动轮寻 查数据
     var hasPreviousPage: Boolean?=false
     var lastPage = 1
-
+    private var temp: Long = 0
+    private var receiver: BroadcastReceiver? = null
+    private var newest : BigDecimal = BigDecimal(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +60,36 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
             itmeView.tvContent.text = "警告原因：${item.alarmReason}"
             itmeView.click {
-                toast("${item.alarmPictureName}")
+//                toast("${item.alarmPictureName}")
+                showDialog(item.alarmPictureName)
             }
         }, emptyList())
         recycleView.adapter = easyAdapter
         getDataInfo()
         initEvent()
+        initReceiver()
+        //image.loadFromUrl("https://dpic.tiankong.com/00/x7/QJ6331726352.jpg?x-oss-process=style/794ws")
+
+        mApiViewModel.getListByTime(pageNum,2).observe(this,androidx.lifecycle.Observer {
+
+            if(it !=null) {
+                hasNextPage = it.hasNextPage
+                hasPreviousPage = it.hasPreviousPage
+                lastPage = it.lastPage?.toInt()
+                if(!it.list.isEmpty()) {
+                    if(BigDecimal(it.list?.get(0)?.id) > newest) {
+                        if(isAuto == true){
+                            showDialog(it.list?.get(0)?.alarmPictureName)
+                        }
+                        newest = BigDecimal(it.list?.get(0)?.id)
+                    }
+                    mList.clear()
+                    mList.addAll(it?.list)
+                }
+            }
+            easyAdapter.submitList(mList)
+        })
+
     }
 
 
@@ -66,6 +102,13 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
                 hasPreviousPage = it.hasPreviousPage
                 lastPage = it.lastPage?.toInt()
                 if(!it.list.isEmpty()) {
+                    if(BigDecimal(it.list?.get(0)?.id) > newest) {
+                        if(isAuto == true){
+                            showDialog(it.list?.get(0)?.alarmPictureName)
+                        }
+                        newest = BigDecimal(it.list?.get(0)?.id)
+                    }
+                    mList.clear()
                     mList.addAll(it?.list)
                 }
             }
@@ -255,6 +298,8 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
     private fun initEvent() {
         btnPre.click {
             if(hasPreviousPage == true){
+                isAuto = false
+                temp = 0
                 pageNum--
                 getDataInfo()
             }else{
@@ -264,6 +309,8 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
 
         btnNext.click {
             if(hasNextPage == true){
+                isAuto = false
+                temp = 0
                 pageNum++
                 getDataInfo()
             }else{
@@ -275,9 +322,50 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
             if(hasNextPage == false){
                 toast("已经是最后一页了")
             }else{
+                isAuto = false
+                temp = 0
                 pageNum = lastPage
                 getDataInfo()
             }
         }
     }
+
+    fun initReceiver(){
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val action = intent.action
+                if (action == Intent.ACTION_TIME_TICK) {
+                    if (System.currentTimeMillis() - temp > 1000 * 60 * 2) {
+                        isAuto = true
+                        pageNum = 1
+                        temp = System.currentTimeMillis()
+                        getDataInfo()
+                    }
+                }
+            }
+        }
+
+        val filter = IntentFilter()
+        filter.addAction(Intent.ACTION_TIME_TICK)
+        registerReceiver(receiver, filter)
+    }
+
+    fun showDialog(string:String){
+
+       var dialog =  ErrorDialog.Builder(this)
+            .message(string)
+            .setNegativeButton { dialog ->
+                dialog.dismiss()
+            }.build()
+        dialog.show()
+
+        Observable.timer(3000, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                dialog.dismiss()
+            }
+    }
+
+
+
 }

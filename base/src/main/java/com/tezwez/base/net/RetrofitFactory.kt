@@ -1,12 +1,12 @@
 package com.tezwez.base.net
 
-import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.orhanobut.hawk.Hawk
-import com.tezwez.base.*
-
+import com.tezwez.base.BuildConfig
+import com.tezwez.base.DEVICE_ID
+import com.tezwez.base.KEY_TOKEN
 import com.tezwez.base.net.dto.COMMON_SUC_CODE
 import com.tezwez.base.net.notice.ErrorNotice
 import okhttp3.*
@@ -52,11 +52,8 @@ private val interceptor: Interceptor
 
         val request = chain.request()
         val builder = request.newBuilder()
-            .addHeader("Content_Type", "application/json")
+            .addHeader("Content-Type", "application/json")
             .addHeader("charset","UTF-8")
-            .addHeader("source-terminal", "Android")     //操作系统名称（注：ios、android）//设备型号
-            .addHeader("device-model", Build.MODEL)             //设备型号
-            .addHeader("os-version", Build.VERSION.RELEASE)     //操作系统版本号
 
         val token = Hawk.get<String>(KEY_TOKEN)
         if (token != null){
