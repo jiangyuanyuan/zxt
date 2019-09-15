@@ -3,7 +3,6 @@ package com.example.zxt
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
@@ -19,18 +18,61 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
+import com.tezwez.base.common.BaseActivity
+import com.tezwez.base.helper.click
+import com.tezwez.club.data.dto.MyData
+import com.tezwez.club.data.vm.ApiViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_msg.view.*
+import org.jetbrains.anko.toast
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
-    lateinit var easyAdapter : EasyAdapter<String>
-    var mList = mutableListOf<String>()
+class MainActivity : BaseActivity(), OnChartValueSelectedListener {
+    lateinit var easyAdapter : EasyAdapter<MyData>
+    var mList = mutableListOf<MyData>()
+    val mApiViewModel: ApiViewModel by viewModel()
+    var pageNum = 1
+
+    var hasNextPage: Boolean ?= true
+    var hasPreviousPage: Boolean?=false
+    var lastPage = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initTu()
+        recycleView.layoutManager = LinearLayoutManager(this)
+        easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
+            itmeView.tvContent.text = "警告原因：${item.alarmReason}"
+            itmeView.click {
+                toast("${item.alarmPictureName}")
+            }
+        }, emptyList())
+        recycleView.adapter = easyAdapter
+        getDataInfo()
+        initEvent()
+    }
+
+
+
+    fun getDataInfo(){
+        mApiViewModel.getList(pageNum,2).observe(this,androidx.lifecycle.Observer {
+
+            if(it !=null) {
+                hasNextPage = it.hasNextPage
+                hasPreviousPage = it.hasPreviousPage
+                lastPage = it.lastPage?.toInt()
+                if(!it.list.isEmpty()) {
+                    mList.addAll(it?.list)
+                }
+            }
+            easyAdapter.submitList(mList)
+        })
+    }
+    private fun initTu() {
         // background color
         chart.setBackgroundColor(Color.WHITE)
         // disable description text
@@ -58,7 +100,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
         val xAxis: XAxis
         run {
-            // // X-Axis Style // //
+            // // MyData-Axis Style // //
             xAxis = chart.xAxis
 
             // vertical grid lines
@@ -130,26 +172,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
         l.form = Legend.LegendForm.LINE
 
 
-
-        recycleView.layoutManager = LinearLayoutManager(this)
-        easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
-            itmeView.tvContent.text = "报警${position}号"
-        }, emptyList())
-        mList.add("1")
-        mList.add("1")
-        mList.add("1")
-        mList.add("1")
-        mList.add("1")
-        mList.add("1")
-        mList.add("1")
-        recycleView.adapter = easyAdapter
-        easyAdapter.submitList(mList)
-
-
-
-
     }
-
     private fun setData(count: Int, range: Float) {
 
         val values = ArrayList<Entry>()
@@ -223,13 +246,38 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
             chart.data = data
         }
     }
-
-
     override fun onNothingSelected() {
 
     }
-
     override fun onValueSelected(e: Entry?, h: Highlight?) {
 
+    }
+    private fun initEvent() {
+        btnPre.click {
+            if(hasPreviousPage == true){
+                pageNum--
+                getDataInfo()
+            }else{
+                toast("已经是第一页了")
+            }
+        }
+
+        btnNext.click {
+            if(hasNextPage == true){
+                pageNum++
+                getDataInfo()
+            }else{
+                toast("已经是最后一页了")
+            }
+        }
+
+        btnLast.click {
+            if(hasNextPage == false){
+                toast("已经是最后一页了")
+            }else{
+                pageNum = lastPage
+                getDataInfo()
+            }
+        }
     }
 }

@@ -33,18 +33,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                android:id="@+id/btnPre"
                 android:text="上一页"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
 
             <Button
+                android:id="@+id/btnNext"
                 android:text="下一页"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
 
             <Button
+                android:id="@+id/btnLast"
                 android:text="末页"
                 android:layout_weight="1"
                 android:layout_width="0dp"

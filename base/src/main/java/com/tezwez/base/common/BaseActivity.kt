@@ -1,20 +1,13 @@
 package com.tezwez.base.common
 
-import android.Manifest
+
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.media.MediaFormat.KEY_LANGUAGE
-import android.os.Build
 import android.os.Bundle
-
-import android.view.*
-import com.orhanobut.hawk.Hawk
+import android.view.View
+import android.view.WindowManager
 import kotlinx.android.synthetic.main.head_layout.*
 import me.yokeyword.fragmentation.SupportActivity
-
-
-import java.util.*
-
 import me.yokeyword.fragmentation.anim.DefaultNoAnimator
 
 
@@ -39,8 +32,8 @@ open class BaseActivity : SupportActivity()  {
     private fun initLocaleLanguage() {
         val resources = this.getResources()
         val configuration = resources.getConfiguration()
-        configuration.locale = Hawk.get(KEY_LANGUAGE, Locale.getDefault())
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());//更新配置
+//        configuration.locale = Hawk.get(KEY_LANGUAGE, Locale.getDefault())
+//        resources.updateConfiguration(configuration, resources.getDisplayMetrics());//更新配置
 
     }
 
