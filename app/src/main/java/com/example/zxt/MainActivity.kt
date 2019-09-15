@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
@@ -37,6 +38,7 @@ import kotlinx.android.synthetic.main.item_msg.view.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -160,10 +162,20 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         run {
             // // MyData-Axis Style // //
             xAxis = lineChart.xAxis
-
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f)
+
         }
+
+        xAxis.setValueFormatter(object : ValueFormatter(){
+            var mFormat = SimpleDateFormat("M月d")
+            override fun getFormattedValue(value: Float): String {
+                return mFormat.format(Date(value.toLong()))
+            }
+        })
+
+
+
 
         val yAxis: YAxis
         run {
@@ -237,7 +249,8 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
-            values.add(Entry(i.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+            var time = DateUtils.stringToLong(data.day,DateUtils.FORMAT_SHORT_SPE)
+            values.add(Entry(time.toFloat(), sum, resources.getDrawable(R.drawable.star)))
         }
 
         val set1: LineDataSet
