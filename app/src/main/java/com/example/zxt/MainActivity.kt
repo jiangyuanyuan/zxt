@@ -50,7 +50,7 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
     var hasNextPage: Boolean ?= true
     var isAuto: Boolean ?= false //自动轮寻 查数据
     var hasPreviousPage: Boolean?=false
-    var lastPage = 1
+    var total = 1
     private var temp: Long = 0
     private var receiver: BroadcastReceiver? = null
     private var newest : BigDecimal = BigDecimal(0)
@@ -92,12 +92,12 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
 
 
     fun getDataInfo(){
-        mApiViewModel.getList(pageNum,2).observe(this,androidx.lifecycle.Observer {
+        mApiViewModel.getList(pageNum,10).observe(this,androidx.lifecycle.Observer {
 
             if(it !=null) {
                 hasNextPage = it.hasNextPage
                 hasPreviousPage = it.hasPreviousPage
-                lastPage = it.lastPage?.toInt()
+                total = it.total?.toInt()
                 if(!it.list.isEmpty()) {
                     if(BigDecimal(it.list?.get(0)?.id) > newest) {
                         if(isAuto == true){
@@ -331,7 +331,7 @@ class MainActivity : BaseActivity(), OnChartValueSelectedListener {
             }else{
                 isAuto = false
                 temp = 0
-                pageNum = lastPage
+                pageNum = total/10 + 1
                 getDataInfo()
             }
         }
