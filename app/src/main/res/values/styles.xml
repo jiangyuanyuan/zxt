@@ -24,9 +24,19 @@
         <item name="android:layout_height">44dp</item>
         <item name="android:background">@drawable/fade_red_btn</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="text_btn1">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:background">@drawable/fade_red_btn</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 
 
 </resources>
