@@ -74,17 +74,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             when(item.pictureType){
                 "0"->{
                     itmeView.tvType.text = "一级警告"
-                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+
                     itmeView.tvType.setTextColor(resources.getColor(R.color.red))
                 }
                 "1"->{
                     itmeView.tvType.text = "二级警告"
-                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+
                     itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
                 "2"->{
                     itmeView.tvType.text = "三级警告"
-                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
                     itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
             }

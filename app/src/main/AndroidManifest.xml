@@ -15,18 +15,15 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:label,android:allowBackup">
         <activity android:name=".ImageActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
             ></activity>
         <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
             >
         </activity>
 
         <activity android:name=".WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,10 +46,10 @@
 
         <meta-data
             android:name="design_width_in_dp"
-            android:value="360" />
+            android:value="1280" />
         <meta-data
             android:name="design_height_in_dp"
-            android:value="640" />
+            android:value="720" />
     </application>
 
 </manifest>

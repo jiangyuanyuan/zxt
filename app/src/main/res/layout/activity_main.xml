@@ -4,96 +4,297 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
-    android:paddingTop="30dp"
+    android:orientation="horizontal"
+    android:paddingTop="40dp"
     tools:context=".MainActivity">
 
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+
+
+
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
         <TextView
-            android:text="近30 天数据"
-            android:textSize="30sp"
-            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:textColor="@color/color_333333"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="360dp" />
-
-
-
+            android:paddingLeft="40dp"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:text="鸿逸达科技"
+            />
 
 
         <TextView
-            android:text="历史数据"
-            android:textSize="30sp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="当日告警"
+            android:gravity="center_vertical"
+            android:paddingLeft="40dp"
+            android:layout_marginTop="20dp"
             android:textColor="@color/color_333333"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:textSize="20sp" />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart2"
-            android:layout_marginTop="20dp"
+<!--        <com.github.mikephil.charting.charts.LineChart-->
+<!--            android:id="@+id/chart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_weight="1" />-->
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="20dp"
+            android:layout_weight="1">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="单位"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                />
+
+        </RelativeLayout>
+
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="360dp" />
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="40dp"
+                android:text="历史告警"
+                android:textColor="@color/color_333333"
+                android:textSize="20sp" />
+
+            <Button
+                style="@style/text_btn1"
+                android:text="日"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                style="@style/text_btn1"
+                android:text="月"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <Button
+                style="@style/text_btn1"
+                android:text="年"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="单位"
+                    android:visibility="gone"
+                    android:layout_margin="5dp"
+                    />
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/color_333333"
+            android:paddingLeft="40dp"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:text="监仓异常预警系统"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            >
+
+            <Button
+                android:id="@+id/btnFrist"
+                style="@style/text_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="首页" />
+
+            <Button
+                android:id="@+id/btnPre"
+                style="@style/text_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="上一页" />
+
+            <Button
+                android:id="@+id/btnNext"
+                style="@style/text_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="下一页" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+
+            <Button
+                android:id="@+id/btnTo"
+                style="@style/text_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="跳转到" />
+
+
+            <Button
+                android:id="@+id/btnLast"
+                style="@style/text_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="末页" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:text="02 警告级别"
+                android:textSize="20sp"
+                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:gravity="center_vertical"
+                android:textColor="@color/common_blue"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:text="03 时间"
+                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:textColor="@color/common_blue"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:text="04 警告原因"
+                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:textColor="@color/common_blue"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:text="05 查看图片"
+                android:textSize="20sp"
+                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:gravity="center_vertical"
+                android:textColor="@color/common_blue"
+                />
+
+
+
+
+        </LinearLayout>
+
 
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleView"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/bg_rounded_00c1a8_10"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btnPre"
-                android:text="上一页"
-                android:layout_margin="10dp"
-                style="@style/text_btn"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/btnNext"
-                android:text="下一页"
-                style="@style/text_btn"
-                android:layout_weight="1"
-                android:layout_margin="10dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/btnLast"
-                android:text="末页"
-                style="@style/text_btn"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_margin="10dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
-
 
 
 </LinearLayout>
