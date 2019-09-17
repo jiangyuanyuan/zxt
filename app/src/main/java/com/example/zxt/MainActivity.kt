@@ -100,13 +100,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         //image.loadFromUrl("https://dpic.tiankong.com/00/x7/QJ6331726352.jpg?x-oss-process=style/794ws")
 
         mApiViewModel.getListByTime(30).observe(this,androidx.lifecycle.Observer {
-            if(it.isEmpty().not()) {
+            if(it?.isEmpty()?.not() == true) {
                 setData(chart,it)
             }
         })
 
         mApiViewModel.getListByTimeHistory(90).observe(this,androidx.lifecycle.Observer {
-            if(it.isEmpty().not()) {
+            if(it?.isEmpty()?.not() == true) {
                 setData(chart2,it)
             }
         })
@@ -193,7 +193,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             yAxis.enableGridDashedLine(10f, 10f, 0f)
 
             // axis range
-            yAxis.axisMaximum = 200f
+            yAxis.axisMaximum = 550f
             yAxis.axisMinimum = 0f
         }
 
@@ -207,18 +207,18 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             llXAxis.textSize = 10f
 //            llXAxis.typeface = tfRegular
 
-            val ll1 = LimitLine(150f, "Upper Limit")
+            val ll1 = LimitLine(350f, "Upper Limit")
             ll1.lineWidth = 4f
             ll1.enableDashedLine(10f, 10f, 0f)
             ll1.labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
             ll1.textSize = 10f
 //            ll1.typeface = tfRegular
 
-            val ll2 = LimitLine(-30f, "Lower Limit")
-            ll2.lineWidth = 4f
-            ll2.enableDashedLine(10f, 10f, 0f)
-            ll2.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
-            ll2.textSize = 10f
+//            val ll2 = LimitLine(-30f, "Lower Limit")
+////            ll2.lineWidth = 4f
+////            ll2.enableDashedLine(10f, 10f, 0f)
+////            ll2.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
+////            ll2.textSize = 10f
 //            ll2.typeface = tfRegular
 
             // draw limit lines behind data instead of on top
@@ -226,8 +226,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             xAxis.setDrawLimitLinesBehindData(true)
 
             // add limit lines
-            yAxis.addLimitLine(ll1)
-            yAxis.addLimitLine(ll2)
+//            yAxis.addLimitLine(ll1)
+//            yAxis.addLimitLine(ll2)
             //xAxis.addLimitLine(llXAxis);
         }
 
@@ -390,7 +390,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }.build()
         dialog.show()
 
-        Observable.timer(3000, TimeUnit.MILLISECONDS)
+        Observable.timer(5000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 dialog.dismiss()
