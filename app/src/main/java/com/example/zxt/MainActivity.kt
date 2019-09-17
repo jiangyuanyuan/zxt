@@ -96,14 +96,19 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         getDataInfo()
         initEvent()
         initReceiver()
-        //image.loadFromUrl("https://dpic.tiankong.com/00/x7/QJ6331726352.jpg?x-oss-process=style/794ws")
-
         mApiViewModel.getListByTime(30).observe(this,androidx.lifecycle.Observer {
             if(it?.isEmpty()?.not() == true) {
                 setData(chart,it,1)
             }
         })
 
+        //日
+        mApiViewModel.getListByTimeHistory(30).observe(this,androidx.lifecycle.Observer {
+            if(it?.isEmpty()?.not() == true) {
+                initTu(chart2,1)
+                setData(chart2,it,1)
+            }
+        })
     }
 
 
@@ -270,13 +275,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
-//            var time = DateUtils.stringToLong(data.day + "15",when(type){
-//                1->DateUtils.type1
-//                2->DateUtils.type2
-//                3->DateUtils.type3
-//                else -> DateUtils.type1
-//            })
-//            var time = DateUtils.stringToLong(data.day+"15",DateUtils.type1)
             var time : Long = 0
             if(type == 1) {
                 time = DateUtils.stringToLong(data.day, DateUtils.type1)
@@ -360,14 +358,38 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
     private fun initEvent() {
         btnPre.click {
-//            if(hasPreviousPage == true){
-//                isAuto = false
-//                temp = 0
-//                pageNum--
-//                getDataInfo()
-//            }else{
-//                toast("已经是第一页了")
-//            }
+            if(hasPreviousPage == true){
+                isAuto = false
+                temp = 0
+                pageNum--
+                getDataInfo()
+            }else{
+                toast("已经是第一页了")
+            }
+        }
+
+        btnNext.click {
+            if(hasNextPage == true){
+                isAuto = false
+                temp = 0
+                pageNum++
+                getDataInfo()
+            }else{
+                toast("已经是最后一页了")
+            }
+
+        btnLast.click {
+            if(hasNextPage == false){
+                toast("已经是最后一页了")
+            }else{
+                isAuto = false
+                temp = 0
+                pageNum = total/10 + 1
+                getDataInfo()
+            }
+        }
+
+        day.click {
             //日
             mApiViewModel.getListByTimeHistory(30).observe(this,androidx.lifecycle.Observer {
                 if(it?.isEmpty()?.not() == true) {
@@ -375,44 +397,27 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                     setData(chart2,it,1)
                 }
             })
-
         }
 
-        btnNext.click {
-//            if(hasNextPage == true){
-//                isAuto = false
-//                temp = 0
-//                pageNum++
-//                getDataInfo()
-//            }else{
-//                toast("已经是最后一页了")
-//            }
+        month.click {
             //月
-          mApiViewModel.getListByMonth(12).observe(this,androidx.lifecycle.Observer {
-            if(it?.isEmpty()?.not() == true) {
-                initTu(chart2,2)
-                setData(chart2,it,2)
-            }
-        })
+            mApiViewModel.getListByMonth(12).observe(this,androidx.lifecycle.Observer {
+                if(it?.isEmpty()?.not() == true) {
+                    initTu(chart2,2)
+                    setData(chart2,it,2)
+                }
+            })
         }
 
-        btnLast.click {
-//            if(hasNextPage == false){
-//                toast("已经是最后一页了")
-//            }else{
-//                isAuto = false
-//                temp = 0
-//                pageNum = total/10 + 1
-//                getDataInfo()
-//            }
-            //年
-            mApiViewModel.getListByYear(20).observe(this,androidx.lifecycle.Observer {
-            if(it?.isEmpty()?.not() == true) {
-                initTu(chart2,3)
-                setData(chart2,it,3)
-            }
-        })
+        }
 
+        year.click {
+            mApiViewModel.getListByYear(20).observe(this,androidx.lifecycle.Observer {
+                if(it?.isEmpty()?.not() == true) {
+                    initTu(chart2,3)
+                    setData(chart2,it,3)
+                }
+            })
         }
     }
 

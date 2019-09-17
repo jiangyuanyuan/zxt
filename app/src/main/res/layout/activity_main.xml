@@ -90,6 +90,7 @@
                 android:textSize="20sp" />
 
             <Button
+                android:id="@+id/day"
                 style="@style/text_btn1"
                 android:text="日"
                 android:layout_marginLeft="20dp"
@@ -100,6 +101,7 @@
                 android:layout_height="wrap_content"/>
 
             <Button
+                android:id="@+id/month"
                 style="@style/text_btn1"
                 android:text="月"
                 android:layout_marginLeft="10dp"
@@ -109,6 +111,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
             <Button
+                android:id="@+id/year"
                 style="@style/text_btn1"
                 android:text="年"
                 android:layout_marginLeft="10dp"
