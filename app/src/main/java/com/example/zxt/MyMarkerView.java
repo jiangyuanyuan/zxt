@@ -25,10 +25,10 @@ public class MyMarkerView extends MarkerView {
 
     private final TextView tvContent;
     private final TextView num;
+    private int mType = 1;
 
     public MyMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
-
         tvContent = findViewById(R.id.tvContent);
         num = findViewById(R.id.num);
     }
@@ -44,7 +44,21 @@ public class MyMarkerView extends MarkerView {
 
             tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
-            SimpleDateFormat mFormat = new SimpleDateFormat("M月d");
+            SimpleDateFormat mFormat=null;
+            switch (mType){
+                case 1:
+                    mFormat = new SimpleDateFormat("M月d");
+                    break;
+                case 2:
+                    mFormat = new SimpleDateFormat("yy年M月");
+                    break;
+                case 3:
+                    mFormat = new SimpleDateFormat("yyyy年");
+                    break;
+                    default:
+                        mFormat = new SimpleDateFormat("M月d");
+                        break;
+            }
             tvContent.setText(mFormat.format(new Date((long)e.getX())));
             num.setText(Utils.formatNumber(e.getY(), 0, true));
         }
@@ -56,4 +70,10 @@ public class MyMarkerView extends MarkerView {
     public MPPointF getOffset() {
         return new MPPointF(-(getWidth() / 2), -getHeight());
     }
+
+
+    public void setType(int type){
+        mType = type;
+    }
+
 }

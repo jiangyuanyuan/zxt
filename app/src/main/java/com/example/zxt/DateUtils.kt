@@ -54,7 +54,9 @@ object DateUtils {
     /**
      * 英文简写（默认）如：2010-12-01
      */
-    var FORMAT_SHORT_SPE = "yyyyMMdd"
+    var type1 = "yyyyMMdd"
+    var type2 = "yyyyMM"
+    var type3 = "yyyy"
     var FORMAT_SHORT_SPE_ = "HH:mm"
 
     var TIMEZONE = "Asia/Shanghai"
