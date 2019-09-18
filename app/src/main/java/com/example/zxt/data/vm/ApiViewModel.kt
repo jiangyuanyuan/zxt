@@ -15,6 +15,8 @@ class ApiViewModel(private val api: Api) : ViewModel() {
 
     val getCount = MutableLiveData<List<CountBean>>()
     val getCountHistory = MutableLiveData<List<CountBean>>()
+    val getListByMonth = MutableLiveData<List<CountBean>>()
+    val getListByYear = MutableLiveData<List<CountBean>>()
 
     /**
      * 获取列表接口
@@ -61,6 +63,30 @@ class ApiViewModel(private val api: Api) : ViewModel() {
         api.getListByTime(req).compose(applySchedulersOnSingle())
             .subscribe(DataObserver(getCountHistory))
         return getCountHistory
+    }
+
+    fun getListByMonth(
+        timeNumber: Int? = null
+    ): LiveData<List<CountBean>> = let {
+        val req = Req()
+        if (timeNumber != null)
+            req.putParams("timeNumber", timeNumber)
+        req.putParams("sortType",1.toString())
+        api.getListByMonth(req).compose(applySchedulersOnSingle())
+            .subscribe(DataObserver(getListByMonth))
+        return getListByMonth
+    }
+
+    fun getListByYear(
+        timeNumber: Int? = null
+    ): LiveData<List<CountBean>> = let {
+        val req = Req()
+        if (timeNumber != null)
+            req.putParams("timeNumber", timeNumber)
+        req.putParams("sortType",1.toString())
+        api.getListByYear(req).compose(applySchedulersOnSingle())
+            .subscribe(DataObserver(getListByYear))
+        return getListByYear
     }
 
 

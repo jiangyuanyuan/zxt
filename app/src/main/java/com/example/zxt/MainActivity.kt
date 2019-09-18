@@ -62,8 +62,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initTu(chart)
-        initTu(chart2)
+        initTu(chart,2)
+        initTu(chart2,3)
         recycleView.layoutManager = LinearLayoutManager(this)
         easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
             itmeView.tvContent.text = "警告原因：${item.alarmReason}"
@@ -74,17 +74,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             when(item.pictureType){
                 "0"->{
                     itmeView.tvType.text = "一级警告"
-                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+
                     itmeView.tvType.setTextColor(resources.getColor(R.color.red))
                 }
                 "1"->{
                     itmeView.tvType.text = "二级警告"
-                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
+
                     itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
                 "2"->{
                     itmeView.tvType.text = "三级警告"
-                    itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
                     itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
             }
@@ -97,20 +96,19 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         getDataInfo()
         initEvent()
         initReceiver()
-        //image.loadFromUrl("https://dpic.tiankong.com/00/x7/QJ6331726352.jpg?x-oss-process=style/794ws")
-
         mApiViewModel.getListByTime(30).observe(this,androidx.lifecycle.Observer {
             if(it?.isEmpty()?.not() == true) {
-                setData(chart,it)
+                setData(chart,it,1)
             }
         })
 
-        mApiViewModel.getListByTimeHistory(90).observe(this,androidx.lifecycle.Observer {
+        //日
+        mApiViewModel.getListByTimeHistory(30).observe(this,androidx.lifecycle.Observer {
             if(it?.isEmpty()?.not() == true) {
-                setData(chart2,it)
+                initTu(chart2,1)
+                setData(chart2,it,1)
             }
         })
-
     }
 
 
@@ -136,7 +134,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             easyAdapter.submitList(mList)
         })
     }
-    private fun initTu(lineChart : LineChart) {
+    private fun initTu(lineChart : LineChart,type : Int) {
         // background color
         lineChart.setBackgroundColor(Color.WHITE)
         // disable description text
@@ -148,7 +146,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         lineChart.setDrawGridBackground(false)
         // create marker to display box when values are selected
         val mv = MyMarkerView(this, R.layout.custom_marker_view)
-
+        mv.setType(type)
         // Set the marker to the lineChart
         mv.setChartView(lineChart)
         lineChart.marker = mv
@@ -172,9 +170,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         }
 
         xAxis.setValueFormatter(object : ValueFormatter(){
-            var mFormat = SimpleDateFormat("M月d")
             override fun getFormattedValue(value: Float): String {
-                return mFormat.format(Date(value.toLong()))
+                var mFormat1 = SimpleDateFormat("M月d")
+                var mFormat2 = SimpleDateFormat("yy年M月")
+                var mFormat3 = SimpleDateFormat("yyyy年")
+                return when(type){
+                    1-> mFormat1.format(Date(value.toLong()))
+                    2-> mFormat2.format(Date(value.toLong()))
+                    3-> mFormat3.format(Date(value.toLong()))
+                    else -> mFormat1.format(Date(value.toLong()))
+                }
             }
         })
 
@@ -193,9 +198,26 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             yAxis.enableGridDashedLine(10f, 10f, 0f)
 
             // axis range
-            yAxis.axisMaximum = 550f
+            yAxis.axisMaximum = when(type){
+                1-> 600f
+                2-> 6000f
+                3-> 60000f
+                else -> 600f
+            }
             yAxis.axisMinimum = 0f
         }
+
+//        yAxis.setValueFormatter(object : ValueFormatter(){
+//            override fun getFormattedValue(value: Float): String {
+//                 when(type){
+//                    1-> return (value.toInt()/10).toString()
+//                        2-> return (value.toInt()/100).toString()
+//                        3-> return (value.toInt()/1000).toString()
+//                }
+//                return value.toString()
+//            }
+//        })
+
 
 
         run {
@@ -249,13 +271,21 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     }
 
-    private fun setData(lineChart : LineChart,list : List<CountBean>) {
+    private fun setData(lineChart : LineChart,list : List<CountBean>,type : Int) {
         val values = ArrayList<Entry>()
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
-            var time = DateUtils.stringToLong(data.day,DateUtils.FORMAT_SHORT_SPE)
+            var time : Long = 0
+            if(type == 1) {
+                time = DateUtils.stringToLong(data.day, DateUtils.type1)
+            }else if(type == 2){
+                time = DateUtils.stringToLong(data.day + "15", DateUtils.type1)
+            }else {
+                time = DateUtils.stringToLong(data.day + "1230", DateUtils.type1)
+            }
             values.add(Entry(time.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+
         }
 
         val set1: LineDataSet
@@ -348,7 +378,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }else{
                 toast("已经是最后一页了")
             }
-        }
 
         btnLast.click {
             if(hasNextPage == false){
@@ -359,6 +388,37 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 pageNum = total/10 + 1
                 getDataInfo()
             }
+        }
+
+        day.click {
+            //日
+            mApiViewModel.getListByTimeHistory(30).observe(this,androidx.lifecycle.Observer {
+                if(it?.isEmpty()?.not() == true) {
+                    initTu(chart2,1)
+                    setData(chart2,it,1)
+                }
+            })
+        }
+
+        month.click {
+            //月
+            mApiViewModel.getListByMonth(12).observe(this,androidx.lifecycle.Observer {
+                if(it?.isEmpty()?.not() == true) {
+                    initTu(chart2,2)
+                    setData(chart2,it,2)
+                }
+            })
+        }
+
+        }
+
+        year.click {
+            mApiViewModel.getListByYear(20).observe(this,androidx.lifecycle.Observer {
+                if(it?.isEmpty()?.not() == true) {
+                    initTu(chart2,3)
+                    setData(chart2,it,3)
+                }
+            })
         }
     }
 

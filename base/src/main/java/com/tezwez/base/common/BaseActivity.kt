@@ -18,9 +18,9 @@ open class BaseActivity : SupportActivity()  {
     //权限
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+                if(this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_PORTRAIT){
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                }
 
         mToolbar?.setNavigationOnClickListener { finish() }
 //        fragmentAnimator = DefaultHorizontalAnimator() //横向动画
