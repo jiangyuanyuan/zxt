@@ -258,7 +258,7 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="4"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:text="04 警告原因"
                 android:background="@drawable/bg_rounded_00c1a8_left_10"
