@@ -36,6 +36,7 @@ import com.tezwez.club.data.vm.ApiViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.custom_marker_view.*
 import kotlinx.android.synthetic.main.item_msg.view.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -67,7 +68,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         day.isSelected = true
         recycleView.layoutManager = LinearLayoutManager(this)
         easyAdapter = EasyAdapter(R.layout.item_msg, { itmeView, position, item ->
-            itmeView.tvContent.text = "警告原因：${item.alarmReason}"
+            itmeView.tvContent.text = getMyData(item.alarmReason)
 //            itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
             itmeView.tvTime.text = DateUtils.convertTimeToString(item.alarmTime, datePattern)
             loge(item.alarmTime?.toString())
@@ -99,6 +100,11 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         initReceiver()
         mApiViewModel.getListByTime(30).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
+                var num = 0
+                for(data in it){
+                    num = num + data.sum
+                }
+                tvNum.text = "当日告警 $num 次"
                 setData(chart, it, 1)
             }
         })
@@ -106,6 +112,11 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         //日
         mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
+                var num = 0
+                for(data in it){
+                    num = num + data.sum
+                }
+                tvNumAll.text = "历史告警 $num 次"
                 initTu(chart2, 1)
                 setData(chart2, it, 1)
             }
@@ -410,6 +421,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             year.isSelected = false
             mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
+                    var num = 0
+                    for(data in it){
+                        num = num + data.sum
+                    }
+                    tvNumAll.text = "历史告警 $num 次"
+                    initTu(chart2, 1)
                     initTu(chart2, 1)
                     setData(chart2, it, 1)
                 }
@@ -422,6 +439,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             year.isSelected = false
             mApiViewModel.getListByMonth(12).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
+                    var num = 0
+                    for(data in it){
+                        num = num + data.sum
+                    }
+                    tvNumAll.text = "历史告警 $num 次"
+                    initTu(chart2, 1)
                     initTu(chart2, 2)
                     setData(chart2, it, 2)
                 }
@@ -436,6 +459,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             year.isSelected = true
             mApiViewModel.getListByYear(20).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
+                    var num = 0
+                    for(data in it){
+                        num = num + data.sum
+                    }
+                    tvNumAll.text = "历史告警 $num 次"
+                    initTu(chart2, 1)
                     initTu(chart2, 3)
                     setData(chart2, it, 3)
                 }
@@ -481,5 +510,21 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
     }
 
-
+    fun getMyData (resType : String) : String{
+        return  when(resType){
+            "1"-> "未在指定时间休息"
+            "2"-> "未在指定区域监督"
+            "4"-> "厕所区域异常"
+            "8"-> "窗户区域异常"
+            "16"-> "高度异常"
+            "32"-> "非休息时间休息"
+            "64"-> "进入三角区域"
+            "128"-> "内务不整"
+            "512"-> "单人留仓"
+            "1024"-> "吊拉窗户"
+            "2048"-> "搭人梯"
+            "4096"-> "站被子上做板报"
+            else -> resType
+        }
+    }
 }
