@@ -224,6 +224,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             // draw limit lines behind data instead of on top
             yAxis.setDrawLimitLinesBehindData(true)
             xAxis.setDrawLimitLinesBehindData(true)
+            
 
             // add limit lines
 //            yAxis.addLimitLine(ll1)
