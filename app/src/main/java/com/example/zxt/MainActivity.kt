@@ -45,50 +45,51 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
-    lateinit var easyAdapter : EasyAdapter<MyData>
+    lateinit var easyAdapter: EasyAdapter<MyData>
     var mList = mutableListOf<MyData>()
     val mApiViewModel: ApiViewModel by viewModel()
     var pageNum = 1
 
-    var hasNextPage: Boolean ?= true
-    var isAuto: Boolean ?= false //自动轮寻 查数据
-    var hasPreviousPage: Boolean?=false
+    var hasNextPage: Boolean? = true
+    var isAuto: Boolean? = false //自动轮寻 查数据
+    var hasPreviousPage: Boolean? = false
     var total = 1
     private var temp: Long = 0
     private var receiver: BroadcastReceiver? = null
-    private var newest : BigDecimal = BigDecimal(0)
+    private var newest: BigDecimal = BigDecimal(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initTu(chart,2)
-        initTu(chart2,3)
+        initTu(chart, 1)
+        initTu(chart2, 1)
+        day.isSelected = true
         recycleView.layoutManager = LinearLayoutManager(this)
-        easyAdapter = EasyAdapter(R.layout.item_msg,{ itmeView,position,item->
+        easyAdapter = EasyAdapter(R.layout.item_msg, { itmeView, position, item ->
             itmeView.tvContent.text = "警告原因：${item.alarmReason}"
 //            itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
-            itmeView.tvTime.text = DateUtils.convertTimeToString(item.alarmTime,datePattern)
+            itmeView.tvTime.text = DateUtils.convertTimeToString(item.alarmTime, datePattern)
             loge(item.alarmTime?.toString())
-            loge(DateUtils.convertTimeToString(item.alarmTime,datePattern))
-            when(item.pictureType){
-                "0"->{
+            loge(DateUtils.convertTimeToString(item.alarmTime, datePattern))
+            when (item.pictureType) {
+                "0" -> {
                     itmeView.tvType.text = "一级警告"
 
                     itmeView.tvType.setTextColor(resources.getColor(R.color.red))
                 }
-                "1"->{
+                "1" -> {
                     itmeView.tvType.text = "二级警告"
 
                     itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
-                "2"->{
+                "2" -> {
                     itmeView.tvType.text = "三级警告"
                     itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
             }
             itmeView.click {
-//                toast("${item.alarmPictureName}")
+                //                toast("${item.alarmPictureName}")
                 showDialog(item.alarmPictureName)
             }
         }, emptyList())
@@ -96,33 +97,32 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         getDataInfo()
         initEvent()
         initReceiver()
-        mApiViewModel.getListByTime(30).observe(this,androidx.lifecycle.Observer {
-            if(it?.isEmpty()?.not() == true) {
-                setData(chart,it,1)
+        mApiViewModel.getListByTime(30).observe(this, androidx.lifecycle.Observer {
+            if (it?.isEmpty()?.not() == true) {
+                setData(chart, it, 1)
             }
         })
 
         //日
-        mApiViewModel.getListByTimeHistory(30).observe(this,androidx.lifecycle.Observer {
-            if(it?.isEmpty()?.not() == true) {
-                initTu(chart2,1)
-                setData(chart2,it,1)
+        mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
+            if (it?.isEmpty()?.not() == true) {
+                initTu(chart2, 1)
+                setData(chart2, it, 1)
             }
         })
     }
 
 
+    fun getDataInfo() {
+        mApiViewModel.getList(pageNum, 10).observe(this, androidx.lifecycle.Observer {
 
-    fun getDataInfo(){
-        mApiViewModel.getList(pageNum,10).observe(this,androidx.lifecycle.Observer {
-
-            if(it !=null) {
+            if (it != null) {
                 hasNextPage = it.hasNextPage
                 hasPreviousPage = it.hasPreviousPage
                 total = it.total?.toInt()
-                if(!it.list.isEmpty()) {
-                    if(BigDecimal(it.list?.get(0)?.id) > newest) {
-                        if(isAuto == true){
+                if (!it.list.isEmpty()) {
+                    if (BigDecimal(it.list?.get(0)?.id) > newest) {
+                        if (isAuto == true) {
                             showDialog(it.list?.get(0)?.alarmPictureName)
                         }
                         newest = BigDecimal(it.list?.get(0)?.id)
@@ -134,7 +134,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             easyAdapter.submitList(mList)
         })
     }
-    private fun initTu(lineChart : LineChart,type : Int) {
+
+    private fun initTu(lineChart: LineChart, type: Int) {
         // background color
         lineChart.setBackgroundColor(Color.WHITE)
         // disable description text
@@ -169,21 +170,19 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         }
 
-        xAxis.setValueFormatter(object : ValueFormatter(){
+        xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 var mFormat1 = SimpleDateFormat("M月d")
                 var mFormat2 = SimpleDateFormat("yy年M月")
                 var mFormat3 = SimpleDateFormat("yyyy年")
-                return when(type){
-                    1-> mFormat1.format(Date(value.toLong()))
-                    2-> mFormat2.format(Date(value.toLong()))
-                    3-> mFormat3.format(Date(value.toLong()))
+                return when (type) {
+                    1 -> mFormat1.format(Date(value.toLong()))
+                    2 -> mFormat2.format(Date(value.toLong()))
+                    3 -> mFormat3.format(Date(value.toLong()))
                     else -> mFormat1.format(Date(value.toLong()))
                 }
             }
         })
-
-
 
 
         val yAxis: YAxis
@@ -198,10 +197,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             yAxis.enableGridDashedLine(10f, 10f, 0f)
 
             // axis range
-            yAxis.axisMaximum = when(type){
-                1-> 600f
-                2-> 6000f
-                3-> 60000f
+            yAxis.axisMaximum = when (type) {
+                1 -> 600f
+                2 -> 6000f
+                3 -> 60000f
                 else -> 600f
             }
             yAxis.axisMinimum = 0f
@@ -217,7 +216,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 //                return value.toString()
 //            }
 //        })
-
 
 
         run {
@@ -246,7 +244,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             // draw limit lines behind data instead of on top
             yAxis.setDrawLimitLinesBehindData(true)
             xAxis.setDrawLimitLinesBehindData(true)
-            
+
 
             // add limit lines
 //            yAxis.addLimitLine(ll1)
@@ -271,17 +269,17 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     }
 
-    private fun setData(lineChart : LineChart,list : List<CountBean>,type : Int) {
+    private fun setData(lineChart: LineChart, list: List<CountBean>, type: Int) {
         val values = ArrayList<Entry>()
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
-            var time : Long = 0
-            if(type == 1) {
+            var time: Long = 0
+            if (type == 1) {
                 time = DateUtils.stringToLong(data.day, DateUtils.type1)
-            }else if(type == 2){
+            } else if (type == 2) {
                 time = DateUtils.stringToLong(data.day + "15", DateUtils.type1)
-            }else {
+            } else {
                 time = DateUtils.stringToLong(data.day + "1230", DateUtils.type1)
             }
             values.add(Entry(time.toFloat(), sum, resources.getDrawable(R.drawable.star)))
@@ -351,78 +349,103 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             lineChart.data = data
         }
     }
+
     override fun onNothingSelected() {
 
     }
+
     override fun onValueSelected(e: Entry?, h: Highlight?) {
 
     }
+
     private fun initEvent() {
+        btnFrist.click {
+            if (hasPreviousPage == true) {
+                isAuto = false
+                temp = 0
+                pageNum = 0
+                getDataInfo()
+            } else {
+                toast("已经是第一页了")
+            }
+        }
+
+
         btnPre.click {
-            if(hasPreviousPage == true){
+            if (hasPreviousPage == true) {
                 isAuto = false
                 temp = 0
                 pageNum--
                 getDataInfo()
-            }else{
+            } else {
                 toast("已经是第一页了")
             }
         }
 
         btnNext.click {
-            if(hasNextPage == true){
+            if (hasNextPage == true) {
                 isAuto = false
                 temp = 0
                 pageNum++
                 getDataInfo()
-            }else{
+            } else {
                 toast("已经是最后一页了")
             }
+        }
 
         btnLast.click {
-            if(hasNextPage == false){
+            if (hasNextPage == false) {
                 toast("已经是最后一页了")
-            }else{
+            } else {
                 isAuto = false
                 temp = 0
-                pageNum = total/10 + 1
+                pageNum = total / 10 + 1
                 getDataInfo()
             }
         }
 
         day.click {
-            //日
-            mApiViewModel.getListByTimeHistory(30).observe(this,androidx.lifecycle.Observer {
-                if(it?.isEmpty()?.not() == true) {
-                    initTu(chart2,1)
-                    setData(chart2,it,1)
+            day.isSelected = true
+            month.isSelected = false
+            year.isSelected = false
+            mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
+                if (it?.isEmpty()?.not() == true) {
+                    initTu(chart2, 1)
+                    setData(chart2, it, 1)
                 }
             })
         }
 
         month.click {
-            //月
-            mApiViewModel.getListByMonth(12).observe(this,androidx.lifecycle.Observer {
-                if(it?.isEmpty()?.not() == true) {
-                    initTu(chart2,2)
-                    setData(chart2,it,2)
+            day.isSelected = false
+            month.isSelected = true
+            year.isSelected = false
+            mApiViewModel.getListByMonth(12).observe(this, androidx.lifecycle.Observer {
+                if (it?.isEmpty()?.not() == true) {
+                    initTu(chart2, 2)
+                    setData(chart2, it, 2)
                 }
             })
         }
 
-        }
+
 
         year.click {
-            mApiViewModel.getListByYear(20).observe(this,androidx.lifecycle.Observer {
-                if(it?.isEmpty()?.not() == true) {
-                    initTu(chart2,3)
-                    setData(chart2,it,3)
+            day.isSelected = false
+            month.isSelected = false
+            year.isSelected = true
+            mApiViewModel.getListByYear(20).observe(this, androidx.lifecycle.Observer {
+                if (it?.isEmpty()?.not() == true) {
+                    initTu(chart2, 3)
+                    setData(chart2, it, 3)
                 }
             })
         }
+
+
     }
 
-    fun initReceiver(){
+    fun initReceiver() {
         receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val action = intent.action
@@ -442,9 +465,9 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         registerReceiver(receiver, filter)
     }
 
-    fun showDialog(string:String){
+    fun showDialog(string: String) {
 
-       var dialog =  ErrorDialog.Builder(this)
+        var dialog = ErrorDialog.Builder(this)
             .message(string)
             .setNegativeButton { dialog ->
                 dialog.dismiss()
@@ -457,7 +480,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 dialog.dismiss()
             }
     }
-
 
 
 }

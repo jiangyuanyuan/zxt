@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zxt.data.api.DataObserver
+import com.example.zxt.data.repository.SingleLiveEvent
 import com.tezwez.base.helper.applySchedulersOnSingle
 import com.tezwez.base.net.dto.Req
 import com.tezwez.club.data.api.Api
@@ -11,12 +12,12 @@ import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.DataInfo
 
 class ApiViewModel(private val api: Api) : ViewModel() {
-    val getList = MutableLiveData<DataInfo>()
+    val getList = SingleLiveEvent<DataInfo>()
 
-    val getCount = MutableLiveData<List<CountBean>>()
-    val getCountHistory = MutableLiveData<List<CountBean>>()
-    val getListByMonth = MutableLiveData<List<CountBean>>()
-    val getListByYear = MutableLiveData<List<CountBean>>()
+    val getCount = SingleLiveEvent<List<CountBean>>()
+    val getCountHistory = SingleLiveEvent<List<CountBean>>()
+    val getListByMonth = SingleLiveEvent<List<CountBean>>()
+    val getListByYear = SingleLiveEvent<List<CountBean>>()
 
     /**
      * 获取列表接口

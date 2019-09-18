@@ -23,7 +23,7 @@
             android:layout_height="40dp"
             android:textColor="@color/color_333333"
             android:paddingLeft="40dp"
-            android:textSize="20sp"
+            android:textSize="30sp"
             android:gravity="center_vertical"
             android:text="鸿逸达科技"
             />
@@ -38,13 +38,6 @@
             android:layout_marginTop="20dp"
             android:textColor="@color/color_333333"
             android:textSize="20sp" />
-
-<!--        <com.github.mikephil.charting.charts.LineChart-->
-<!--            android:id="@+id/chart"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_weight="1" />-->
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -70,9 +63,6 @@
 
         </RelativeLayout>
 
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -91,8 +81,9 @@
 
             <Button
                 android:id="@+id/day"
-                style="@style/text_btn1"
                 android:text="日"
+                android:background="@drawable/btn_selector"
+                android:textColor="@drawable/textcolor_selector"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center_vertical"
@@ -102,8 +93,9 @@
 
             <Button
                 android:id="@+id/month"
-                style="@style/text_btn1"
                 android:text="月"
+                android:background="@drawable/btn_selector"
+                android:textColor="@drawable/textcolor_selector"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center_vertical"
@@ -112,8 +104,9 @@
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/year"
-                style="@style/text_btn1"
                 android:text="年"
+                android:background="@drawable/btn_selector"
+                android:textColor="@drawable/textcolor_selector"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_gravity="center_vertical"
@@ -156,14 +149,15 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
+        android:layout_marginRight="20dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textColor="@color/color_333333"
-            android:paddingLeft="40dp"
-            android:textSize="20sp"
+            android:paddingLeft="20dp"
+            android:textSize="30sp"
             android:gravity="center_vertical"
             android:text="监仓异常预警系统"
             />
@@ -172,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="20dp"
             >
 
             <Button
@@ -212,6 +206,7 @@
                 android:id="@+id/btnTo"
                 style="@style/text_btn"
                 android:layout_width="0dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
@@ -235,7 +230,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="20dp"
             >
             <TextView
                 android:layout_width="0dp"
@@ -243,7 +238,7 @@
                 android:layout_height="match_parent"
                 android:text="02 警告级别"
                 android:textSize="20sp"
-                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:background="@drawable/bg_rounded_00c1a8_left_10"
                 android:gravity="center_vertical"
                 android:textColor="@color/common_blue"
                 />
@@ -253,7 +248,7 @@
                 android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:text="03 时间"
-                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:background="@drawable/bg_rounded_00c1a8_left_10"
                 android:textSize="20sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/common_blue"
@@ -264,7 +259,7 @@
                 android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:text="04 警告原因"
-                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:background="@drawable/bg_rounded_00c1a8_left_10"
                 android:textSize="20sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/common_blue"
@@ -276,14 +271,10 @@
                 android:layout_height="match_parent"
                 android:text="05 查看图片"
                 android:textSize="20sp"
-                android:background="@drawable/bg_rounded_00c1a8_10"
+                android:background="@drawable/bg_rounded_00c1a8_right_10"
                 android:gravity="center_vertical"
                 android:textColor="@color/common_blue"
                 />
-
-
-
-
         </LinearLayout>
 
 
@@ -291,7 +282,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleView"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_rounded_00c1a8_10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
