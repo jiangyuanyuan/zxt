@@ -26,6 +26,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
+import com.tencent.bugly.proguard.t
 import com.tezwez.base.common.BaseActivity
 import com.tezwez.base.helper.click
 import com.tezwez.base.helper.loadFromUrl
@@ -58,6 +59,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     private var temp: Long = 0
     private var receiver: BroadcastReceiver? = null
     private var newest: BigDecimal = BigDecimal(0)
+    private var clicks = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -370,6 +372,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     private fun initEvent() {
+
+        tvTitleClick
+
+
+
+
         btnFrist.click {
             if (hasPreviousPage == true) {
                 isAuto = false
@@ -471,6 +479,15 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             })
         }
 
+        tvTitleClick.click {
+            clicks++
+            if(clicks > 7){
+                clicks = 0
+                startActivity(Intent(this, SecondActivity::class.java))
+            }
+        }
+
+
 
     }
 
@@ -524,7 +541,41 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             "1024"-> "吊拉窗户"
             "2048"-> "搭人梯"
             "4096"-> "站被子上做板报"
-            else -> resType
+            else -> getOther(resType)
         }
     }
+
+
+    fun getOther(resType : String) : String{
+        var resu : String = ""
+        var string = Integer.toBinaryString(Integer.parseInt(resType))
+        for ((index, value) in string.toCharArray().withIndex()){
+            if(value == '1'){
+                loge("$resType --->>$index" )
+                resu =   when (string.toCharArray().size - index){
+                    1  -> "未在指定时间休息"
+                    2  -> "未在指定区域监督"
+                    3  -> "厕所区域异常"
+                    4  -> "窗户区域异常"
+                    5 -> "高度异常"
+                    6 -> "非休息时间休息"
+                    7 -> "进入三角区域"
+                    8-> "内务不整"
+                    10-> "单人留仓"
+                    11-> "吊拉窗户"
+                    12-> "搭人梯"
+                    13-> "站被子上做板报"
+                    else -> "未在指定时间休息"
+                } + (if(resu.isNotEmpty()) ("+ $resu") else resu)
+            }
+        }
+        return resu
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //todo  初始化数据
+
+    }
+
 }

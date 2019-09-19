@@ -2,13 +2,8 @@ package com.tezwez.base.net
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import com.orhanobut.hawk.Hawk
 import com.tezwez.base.BuildConfig
-import com.tezwez.base.DEVICE_ID
-import com.tezwez.base.KEY_TOKEN
-import com.tezwez.base.net.dto.COMMON_SUC_CODE
-import com.tezwez.base.net.notice.ErrorNotice
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
