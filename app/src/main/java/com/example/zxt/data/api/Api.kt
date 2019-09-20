@@ -19,6 +19,9 @@ interface Api {
     @POST("/mall/alarmMsg/getListByTime.do")
     fun getListByTime(@Body req: Req): Single<Rep<List<CountBean>>>
 
+    @POST("/mall/alarmMsg/getListByHour.do")
+    fun getListByHour(@Body req: Req): Single<Rep<List<CountBean>>>
+
     @POST("/mall/alarmMsg/getListByMonth.do")
     fun getListByMonth(@Body req: Req): Single<Rep<List<CountBean>>>
 

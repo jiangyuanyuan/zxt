@@ -7,20 +7,37 @@
     android:orientation="vertical"
     tools:context=".SecondActivity">
 
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="60dp"
+        android:text="当前:"></TextView>
+
+
     <EditText
         android:id="@+id/etIp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="40dp"
-        android:hint="请输入 Ip 地址  例如  http://120.79.2.255:8080"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:hint="请输入 Ip 地址  例如  http://120.79.2.255:8080" />
 
     <Button
         android:id="@+id/btnFinish"
-        android:text="完成"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:text="完成" />
+
+    <Button
+        android:id="@+id/btnCancle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:text="取消" />
 
 </LinearLayout>

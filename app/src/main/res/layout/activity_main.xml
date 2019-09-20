@@ -6,117 +6,159 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="horizontal"
-    android:paddingTop="40dp"
     tools:context=".MainActivity">
-
-
-
-
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvTitleClick"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textColor="@color/color_333333"
-            android:paddingLeft="40dp"
-            android:textSize="30sp"
-            android:gravity="center_vertical"
-            android:text="鸿逸达科技"
-            />
 
-
-        <TextView
-            android:id="@+id/tvNum"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="当日告警"
+            android:layout_height="80dp"
+            android:background="@color/c1"
+            android:paddingTop="30dp">
+
+            <ImageView
+                android:id="@+id/tvTitleClick"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/icon_title" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#7faced"
             android:gravity="center_vertical"
-            android:paddingLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/color_333333"
-            android:textSize="20sp" />
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/blt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="当日告警"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                tools:text="0次" />
+
+        </LinearLayout>
+
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
-            android:paddingLeft="20dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:paddingLeft="20dp">
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="单位"
-                android:visibility="gone"
                 android:layout_margin="5dp"
-                />
+                android:text="单位"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:background="#7faced"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            >
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/blt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="历史告警"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/tvNumAll"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="40dp"
-                android:text="历史告警"
-                android:textColor="@color/color_333333"
+                android:paddingLeft="10dp"
+                android:text=""
+                android:textColor="@color/white"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/day"
-                android:text="日"
-                android:background="@drawable/btn_selector"
-                android:textColor="@drawable/textcolor_selector"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:textSize="14sp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"/>
+                android:background="@drawable/btn_selector"
+                android:text="日"
+                android:textColor="@drawable/textcolor_selector" />
 
             <Button
                 android:id="@+id/month"
-                android:text="月"
-                android:background="@drawable/btn_selector"
-                android:textColor="@drawable/textcolor_selector"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:textSize="14sp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"/>
+                android:background="@drawable/btn_selector"
+                android:text="月"
+                android:textColor="@drawable/textcolor_selector" />
+
             <Button
                 android:id="@+id/year"
-                android:text="年"
-                android:background="@drawable/btn_selector"
-                android:textColor="@drawable/textcolor_selector"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:textSize="14sp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-
+                android:background="@drawable/btn_selector"
+                android:text="年"
+                android:textColor="@drawable/textcolor_selector" />
 
 
         </LinearLayout>
@@ -130,20 +172,17 @@
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent" />
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="单位"
-                    android:visibility="gone"
-                    android:layout_margin="5dp"
-                    />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="单位"
+                android:visibility="gone" />
 
         </RelativeLayout>
-
 
 
     </LinearLayout>
@@ -152,25 +191,31 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:layout_marginRight="20dp"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textColor="@color/color_333333"
-            android:paddingLeft="20dp"
-            android:textSize="30sp"
-            android:gravity="center_vertical"
-            android:text="监仓异常预警系统"
-            />
+            android:layout_height="80dp"
+            android:background="#7faced"
+            android:gravity="center"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="20dp"
+                android:text="监仓异常预警系统"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
-            >
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp">
 
             <Button
                 android:id="@+id/btnFrist"
@@ -209,11 +254,11 @@
                 android:id="@+id/btnTo"
                 style="@style/text_btn"
                 android:layout_width="0dp"
-                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="跳转到" />
+                android:text="跳转到"
+                android:visibility="gone" />
 
 
             <Button
@@ -232,64 +277,65 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="20dp"
+            android:background="#f2f2f2"
             android:layout_marginLeft="20dp"
-            >
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp">
+
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
                 android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:paddingLeft="5dp"
+                android:background="@drawable/bg_rounded_00c1a8_left_10"
+                android:gravity="center_vertical"
                 android:text="02 警告级别"
-                android:textSize="20sp"
-                android:background="@drawable/bg_rounded_00c1a8_left_10"
-                android:gravity="center_vertical"
-                android:textColor="@color/common_blue"
-                />
+                android:textColor="#7faced"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:paddingLeft="5dp"
+                android:background="@drawable/bg_rounded_00c1a8_left_10"
+                android:gravity="center_vertical"
                 android:text="03 时间"
-                android:background="@drawable/bg_rounded_00c1a8_left_10"
-                android:textSize="20sp"
-                android:gravity="center_vertical"
-                android:textColor="@color/common_blue"
-                />
+                android:textColor="#7faced"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:paddingLeft="5dp"
+                android:background="@drawable/bg_rounded_00c1a8_left_10"
+                android:gravity="center_vertical"
                 android:text="04 警告原因"
-                android:background="@drawable/bg_rounded_00c1a8_left_10"
-                android:textSize="20sp"
-                android:gravity="center_vertical"
-                android:textColor="@color/common_blue"
-                />
+                android:textColor="#7faced"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
                 android:layout_height="match_parent"
-                android:text="05 查看图片"
-                android:textSize="20sp"
+                android:layout_weight="2"
+                android:paddingLeft="5dp"
                 android:background="@drawable/bg_rounded_00c1a8_right_10"
                 android:gravity="center_vertical"
-                android:textColor="@color/common_blue"
-                />
+                android:text="05 查看图片"
+                android:textColor="#7faced"
+                android:textSize="20sp" />
         </LinearLayout>
-
-
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleView"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_rounded_00c1a8_10"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_rounded_00c1a8_10" />
 
 
     </LinearLayout>

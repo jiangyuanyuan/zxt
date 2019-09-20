@@ -37,6 +37,23 @@ class ApiViewModel(private val api: Api) : ViewModel() {
         return getList
     }
 
+
+    fun getListByHour(
+        timeNumber: Int? = null
+    ): LiveData<List<CountBean>> = let {
+        val req = Req()
+        if (timeNumber != null)
+            req.putParams("timeNumber", timeNumber)
+        req.putParams("sortType",1.toString())
+        api.getListByHour(req).compose(applySchedulersOnSingle())
+            .subscribe(DataObserver(getCount))
+        return getCount
+    }
+
+
+
+
+
     /**
      * 获取列表接口
      */

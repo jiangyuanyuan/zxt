@@ -64,67 +64,67 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initRv()
+        getDataInfo()
+        initEvent()
+        initReceiver()
+        initChart1()
+        initChart2()
+    }
 
-        initTu(chart, 1)
-        initTu(chart2, 1)
-        day.isSelected = true
+    fun initRv(){
         recycleView.layoutManager = LinearLayoutManager(this)
         easyAdapter = EasyAdapter(R.layout.item_msg, { itmeView, position, item ->
             itmeView.tvContent.text = getMyData(item.alarmReason)
-//            itmeView.ivIcon.loadFromUrl(item?.alarmPictureName)
             itmeView.tvTime.text = DateUtils.convertTimeToString(item.alarmTime, datePattern)
-            loge(item.alarmTime?.toString())
-            loge(DateUtils.convertTimeToString(item.alarmTime, datePattern))
             when (item.pictureType) {
                 "0" -> {
                     itmeView.tvType.text = "一级警告"
-
-                    itmeView.tvType.setTextColor(resources.getColor(R.color.red))
                 }
                 "1" -> {
                     itmeView.tvType.text = "二级警告"
-
-                    itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
                 "2" -> {
                     itmeView.tvType.text = "三级警告"
-                    itmeView.tvType.setTextColor(resources.getColor(R.color.color_333333))
                 }
             }
-            itmeView.click {
-                //                toast("${item.alarmPictureName}")
+            itmeView.tvShowImg.click {
                 showDialog(item.alarmPictureName)
             }
         }, emptyList())
         recycleView.adapter = easyAdapter
-        getDataInfo()
-        initEvent()
-        initReceiver()
-        mApiViewModel.getListByTime(30).observe(this, androidx.lifecycle.Observer {
+    }
+
+
+    fun initChart1() {
+        initTu(chart, 4)
+        mApiViewModel.getListByHour(24).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
                 var num = 0
-                for(data in it){
+                for (data in it) {
                     num = num + data.sum
                 }
-                tvNum.text = "当日告警 $num 次"
-                setData(chart, it, 1)
+                tvNum.text = "$num 次"
+                setData(chart, it, 4)
             }
         })
+    }
 
-        //日
+    fun initChart2() {
+        initTu(chart2, 1)
+        day.isSelected = true
         mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
                 var num = 0
-                for(data in it){
+                for (data in it) {
                     num = num + data.sum
                 }
-                tvNumAll.text = "历史告警 $num 次"
+                tvNumAll.text = "$num 次"
                 initTu(chart2, 1)
                 setData(chart2, it, 1)
             }
         })
     }
-
 
     fun getDataInfo() {
         mApiViewModel.getList(pageNum, 10).observe(this, androidx.lifecycle.Observer {
@@ -148,139 +148,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         })
     }
 
-    private fun initTu(lineChart: LineChart, type: Int) {
-        // background color
-        lineChart.setBackgroundColor(Color.WHITE)
-        // disable description text
-        lineChart.getDescription().setEnabled(false)
-        // enable touch gestures
-        lineChart.setTouchEnabled(true)
-        // set listeners
-        lineChart.setOnChartValueSelectedListener(this)
-        lineChart.setDrawGridBackground(false)
-        // create marker to display box when values are selected
-        val mv = MyMarkerView(this, R.layout.custom_marker_view)
-        mv.setType(type)
-        // Set the marker to the lineChart
-        mv.setChartView(lineChart)
-        lineChart.marker = mv
 
-        // enable scaling and dragging
-        lineChart.isDragEnabled = true
-        lineChart.setScaleEnabled(true)
-        // lineChart.setScaleXEnabled(true);
-        // lineChart.setScaleYEnabled(true);
-
-        // force pinch zoom along both axis
-        lineChart.setPinchZoom(true)
-
-        val xAxis: XAxis
-        run {
-            // // MyData-Axis Style // //
-            xAxis = lineChart.xAxis
-            // vertical grid lines
-            xAxis.enableGridDashedLine(10f, 10f, 0f)
-
-        }
-
-        xAxis.setValueFormatter(object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                var mFormat1 = SimpleDateFormat("M月d")
-                var mFormat2 = SimpleDateFormat("yy年M月")
-                var mFormat3 = SimpleDateFormat("yyyy年")
-                return when (type) {
-                    1 -> mFormat1.format(Date(value.toLong()))
-                    2 -> mFormat2.format(Date(value.toLong()))
-                    3 -> mFormat3.format(Date(value.toLong()))
-                    else -> mFormat1.format(Date(value.toLong()))
-                }
-            }
-        })
-
-
-        val yAxis: YAxis
-        run {
-            // // Y-Axis Style // //
-            yAxis = lineChart.axisLeft
-
-            // disable dual axis (only use LEFT axis)
-            lineChart.axisRight.isEnabled = false
-
-            // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 10f, 0f)
-
-            // axis range
-            yAxis.axisMaximum = when (type) {
-                1 -> 600f
-                2 -> 6000f
-                3 -> 60000f
-                else -> 600f
-            }
-            yAxis.axisMinimum = 0f
-        }
-
-//        yAxis.setValueFormatter(object : ValueFormatter(){
-//            override fun getFormattedValue(value: Float): String {
-//                 when(type){
-//                    1-> return (value.toInt()/10).toString()
-//                        2-> return (value.toInt()/100).toString()
-//                        3-> return (value.toInt()/1000).toString()
-//                }
-//                return value.toString()
-//            }
-//        })
-
-
-        run {
-            // // Create Limit Lines // //
-            val llXAxis = LimitLine(9f, "Index 10")
-            llXAxis.lineWidth = 4f
-            llXAxis.enableDashedLine(10f, 10f, 0f)
-            llXAxis.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
-            llXAxis.textSize = 10f
-//            llXAxis.typeface = tfRegular
-
-            val ll1 = LimitLine(350f, "Upper Limit")
-            ll1.lineWidth = 4f
-            ll1.enableDashedLine(10f, 10f, 0f)
-            ll1.labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
-            ll1.textSize = 10f
-//            ll1.typeface = tfRegular
-
-//            val ll2 = LimitLine(-30f, "Lower Limit")
-////            ll2.lineWidth = 4f
-////            ll2.enableDashedLine(10f, 10f, 0f)
-////            ll2.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
-////            ll2.textSize = 10f
-//            ll2.typeface = tfRegular
-
-            // draw limit lines behind data instead of on top
-            yAxis.setDrawLimitLinesBehindData(true)
-            xAxis.setDrawLimitLinesBehindData(true)
-
-
-            // add limit lines
-//            yAxis.addLimitLine(ll1)
-//            yAxis.addLimitLine(ll2)
-            //xAxis.addLimitLine(llXAxis);
-        }
-
-        // add data
-//        seekBarX.setProgress(45)
-//        seekBarY.setProgress(180)
-//        setData(45, 180f)
-
-        // draw points over time
-        lineChart.animateX(1500)
-
-        // get the legend (only possible after setting data)
-        val l = lineChart.legend
-
-        // draw legend entries as lines
-        l.form = Legend.LegendForm.LINE
-
-
-    }
 
     private fun setData(lineChart: LineChart, list: List<CountBean>, type: Int) {
         val values = ArrayList<Entry>()
@@ -292,8 +160,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 time = DateUtils.stringToLong(data.day, DateUtils.type1)
             } else if (type == 2) {
                 time = DateUtils.stringToLong(data.day + "15", DateUtils.type1)
-            } else {
+            } else if (type == 3) {
                 time = DateUtils.stringToLong(data.day + "1230", DateUtils.type1)
+            } else if (type == 4) {
+                time = DateUtils.stringToLong(data.day, DateUtils.type1)
             }
             values.add(Entry(time.toFloat(), sum, resources.getDrawable(R.drawable.star)))
 
@@ -362,34 +232,20 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             lineChart.data = data
         }
     }
-
-    override fun onNothingSelected() {
-
-    }
-
-    override fun onValueSelected(e: Entry?, h: Highlight?) {
-
-    }
+    override fun onNothingSelected() {}
+    override fun onValueSelected(e: Entry?, h: Highlight?) {}
 
     private fun initEvent() {
-
-        tvTitleClick
-
-
-
-
         btnFrist.click {
             if (hasPreviousPage == true) {
                 isAuto = false
                 temp = 0
-                pageNum = 0
+                pageNum = 1
                 getDataInfo()
             } else {
                 toast("已经是第一页了")
             }
         }
-
-
         btnPre.click {
             if (hasPreviousPage == true) {
                 isAuto = false
@@ -400,7 +256,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 toast("已经是第一页了")
             }
         }
-
         btnNext.click {
             if (hasNextPage == true) {
                 isAuto = false
@@ -411,7 +266,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 toast("已经是最后一页了")
             }
         }
-
         btnLast.click {
             if (hasNextPage == false) {
                 toast("已经是最后一页了")
@@ -422,7 +276,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 getDataInfo()
             }
         }
-
         day.click {
             day.isSelected = true
             month.isSelected = false
@@ -430,17 +283,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
-                    for(data in it){
+                    for (data in it) {
                         num = num + data.sum
                     }
-                    tvNumAll.text = "历史告警 $num 次"
+                    tvNumAll.text = "$num 次"
                     initTu(chart2, 1)
                     initTu(chart2, 1)
                     setData(chart2, it, 1)
                 }
             })
         }
-
         month.click {
             day.isSelected = false
             month.isSelected = true
@@ -448,19 +300,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             mApiViewModel.getListByMonth(12).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
-                    for(data in it){
+                    for (data in it) {
                         num = num + data.sum
                     }
-                    tvNumAll.text = "历史告警 $num 次"
+                    tvNumAll.text = "$num 次"
                     initTu(chart2, 1)
                     initTu(chart2, 2)
                     setData(chart2, it, 2)
                 }
             })
         }
-
-
-
         year.click {
             day.isSelected = false
             month.isSelected = false
@@ -468,27 +317,23 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             mApiViewModel.getListByYear(20).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
-                    for(data in it){
+                    for (data in it) {
                         num = num + data.sum
                     }
-                    tvNumAll.text = "历史告警 $num 次"
+                    tvNumAll.text = "$num 次"
                     initTu(chart2, 1)
                     initTu(chart2, 3)
                     setData(chart2, it, 3)
                 }
             })
         }
-
         tvTitleClick.click {
             clicks++
-            if(clicks > 7){
+            if (clicks > 7) {
                 clicks = 0
                 startActivity(Intent(this, SecondActivity::class.java))
             }
         }
-
-
-
     }
 
     fun initReceiver() {
@@ -527,46 +372,46 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
     }
 
-    fun getMyData (resType : String) : String{
-        return  when(resType){
-            "1"-> "未在指定时间休息"
-            "2"-> "未在指定区域监督"
-            "4"-> "厕所区域异常"
-            "8"-> "窗户区域异常"
-            "16"-> "高度异常"
-            "32"-> "非休息时间休息"
-            "64"-> "进入三角区域"
-            "128"-> "内务不整"
-            "512"-> "单人留仓"
-            "1024"-> "吊拉窗户"
-            "2048"-> "搭人梯"
-            "4096"-> "站被子上做板报"
+    fun getMyData(resType: String): String {
+        return when (resType) {
+            "1" -> "未在指定时间休息"
+            "2" -> "未在指定区域监督"
+            "4" -> "厕所区域异常"
+            "8" -> "窗户区域异常"
+            "16" -> "高度异常"
+            "32" -> "非休息时间休息"
+            "64" -> "进入三角区域"
+            "128" -> "内务不整"
+            "512" -> "单人留仓"
+            "1024" -> "吊拉窗户"
+            "2048" -> "搭人梯"
+            "4096" -> "站被子上做板报"
             else -> getOther(resType)
         }
     }
 
 
-    fun getOther(resType : String) : String{
-        var resu : String = ""
+    fun getOther(resType: String): String {
+        var resu: String = ""
         var string = Integer.toBinaryString(Integer.parseInt(resType))
-        for ((index, value) in string.toCharArray().withIndex()){
-            if(value == '1'){
-                loge("$resType --->>$index" )
-                resu =   when (string.toCharArray().size - index){
-                    1  -> "未在指定时间休息"
-                    2  -> "未在指定区域监督"
-                    3  -> "厕所区域异常"
-                    4  -> "窗户区域异常"
+        for ((index, value) in string.toCharArray().withIndex()) {
+            if (value == '1') {
+                loge("$resType --->>$index")
+                resu = when (string.toCharArray().size - index) {
+                    1 -> "未在指定时间休息"
+                    2 -> "未在指定区域监督"
+                    3 -> "厕所区域异常"
+                    4 -> "窗户区域异常"
                     5 -> "高度异常"
                     6 -> "非休息时间休息"
                     7 -> "进入三角区域"
-                    8-> "内务不整"
-                    10-> "单人留仓"
-                    11-> "吊拉窗户"
-                    12-> "搭人梯"
-                    13-> "站被子上做板报"
+                    8 -> "内务不整"
+                    10 -> "单人留仓"
+                    11 -> "吊拉窗户"
+                    12 -> "搭人梯"
+                    13 -> "站被子上做板报"
                     else -> "未在指定时间休息"
-                } + (if(resu.isNotEmpty()) ("+ $resu") else resu)
+                } + (if (resu.isNotEmpty()) ("+ $resu") else resu)
             }
         }
         return resu
@@ -575,7 +420,113 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     override fun onResume() {
         super.onResume()
         //todo  初始化数据
+        initChart1()
+    }
 
+    private fun initTu(lineChart: LineChart, type: Int) {
+        // background color
+        lineChart.setBackgroundColor(Color.WHITE)
+        // disable description text
+        lineChart.getDescription().setEnabled(false)
+        // enable touch gestures
+        lineChart.setTouchEnabled(true)
+        // set listeners
+        lineChart.setOnChartValueSelectedListener(this)
+        lineChart.setDrawGridBackground(false)
+        // create marker to display box when values are selected
+        val mv = MyMarkerView(this, R.layout.custom_marker_view)
+        mv.setType(type)
+        // Set the marker to the lineChart
+        mv.setChartView(lineChart)
+        lineChart.marker = mv
+
+        // enable scaling and dragging
+        lineChart.isDragEnabled = true
+        lineChart.setScaleEnabled(true)
+        // lineChart.setScaleXEnabled(true);
+        // lineChart.setScaleYEnabled(true);
+
+
+        // force pinch zoom along both axis
+        lineChart.setPinchZoom(true)
+
+        val xAxis: XAxis
+        run {
+            // // MyData-Axis Style // //
+            xAxis = lineChart.xAxis
+            // vertical grid lines
+            xAxis.enableGridDashedLine(10f, 10f, 0f)
+
+        }
+
+        xAxis.setValueFormatter(object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                var mFormat1 = SimpleDateFormat("M月d")
+                var mFormat2 = SimpleDateFormat("yy年M月")
+                var mFormat3 = SimpleDateFormat("yyyy年")
+                var mFormat4 = SimpleDateFormat("HH:mm")
+                return when (type) {
+                    1 -> mFormat1.format(Date(value.toLong()))
+                    2 -> mFormat2.format(Date(value.toLong()))
+                    3 -> mFormat3.format(Date(value.toLong()))
+                    4 -> mFormat4.format(Date(value.toLong()))
+                    else -> mFormat1.format(Date(value.toLong()))
+                }
+            }
+        })
+
+
+        val yAxis: YAxis
+        run {
+            // // Y-Axis Style // //
+            yAxis = lineChart.axisLeft
+
+            // disable dual axis (only use LEFT axis)
+            lineChart.axisRight.isEnabled = false
+
+            // horizontal grid lines
+            yAxis.enableGridDashedLine(10f, 10f, 0f)
+
+            // axis range
+            yAxis.axisMaximum = when (type) {
+                1 -> 600f
+                2 -> 6000f
+                3 -> 60000f
+                4 -> 60f
+                else -> 600f
+            }
+            yAxis.axisMinimum = 0f
+        }
+
+        run {
+            // // Create Limit Lines // //
+            val llXAxis = LimitLine(9f, "Index 10")
+            llXAxis.lineWidth = 4f
+            llXAxis.enableDashedLine(10f, 10f, 0f)
+            llXAxis.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
+            llXAxis.textSize = 10f
+//            llXAxis.typeface = tfRegular
+
+            val ll1 = LimitLine(350f, "Upper Limit")
+            ll1.lineWidth = 4f
+            ll1.enableDashedLine(10f, 10f, 0f)
+            ll1.labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+            ll1.textSize = 10f
+//            ll1.typeface = tfRegular
+
+            // draw limit lines behind data instead of on top
+            yAxis.setDrawLimitLinesBehindData(true)
+            xAxis.setDrawLimitLinesBehindData(true)
+
+        }
+        // draw points over time
+        lineChart.animateX(1500)
+
+        // get the legend (only possible after setting data)
+        val l = lineChart.legend
+
+        // draw legend entries as lines
+        l.form = Legend.LegendForm.LINE
     }
 
 }
