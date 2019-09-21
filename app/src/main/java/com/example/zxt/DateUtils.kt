@@ -55,6 +55,7 @@ object DateUtils {
      * 英文简写（默认）如：2010-12-01
      */
     var type1 = "yyyyMMdd"
+    var type4 = "yyyyMMddHH"
     var type2 = "yyyyMM"
     var type3 = "yyyy"
     var FORMAT_SHORT_SPE_ = "HH:mm"

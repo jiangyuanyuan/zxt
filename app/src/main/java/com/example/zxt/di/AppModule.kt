@@ -2,7 +2,6 @@ package com.tezwez.club.di
 
 
 import com.example.zxt.API_BASE_URL
-import com.orhanobut.hawk.Hawk
 import com.tezwez.base.net.okhttp
 import com.tezwez.base.net.retrofit
 import com.tezwez.club.data.api.Api
@@ -17,7 +16,7 @@ val appModule = module {
 
     single<Call.Factory> { okhttp() }
 
-    single { retrofit(get(),if(Hawk.get<String>("IP").isNullOrBlank())  "http://120.79.2.255:8080" else Hawk.get<String>("IP")) }
+    single { retrofit(get(),API_BASE_URL) }
 
     single { get<Retrofit>().create(Api::class.java) }
 

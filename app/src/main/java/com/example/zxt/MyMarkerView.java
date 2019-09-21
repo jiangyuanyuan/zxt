@@ -44,8 +44,8 @@ public class MyMarkerView extends MarkerView {
 
             tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
-            SimpleDateFormat mFormat=null;
-            switch (mType){
+            SimpleDateFormat mFormat = null;
+            switch (mType) {
                 case 1:
                     mFormat = new SimpleDateFormat("M月d");
                     break;
@@ -55,11 +55,14 @@ public class MyMarkerView extends MarkerView {
                 case 3:
                     mFormat = new SimpleDateFormat("yyyy年");
                     break;
-                    default:
-                        mFormat = new SimpleDateFormat("M月d");
-                        break;
+                case 4:
+                    mFormat = new SimpleDateFormat("HH时");
+                    break;
+                default:
+                    mFormat = new SimpleDateFormat("M月d");
+                    break;
             }
-            tvContent.setText(mFormat.format(new Date((long)e.getX())));
+            tvContent.setText(mFormat.format(new Date((long) e.getX())));
             num.setText(Utils.formatNumber(e.getY(), 0, true));
         }
 
@@ -72,7 +75,7 @@ public class MyMarkerView extends MarkerView {
     }
 
 
-    public void setType(int type){
+    public void setType(int type) {
         mType = type;
     }
 

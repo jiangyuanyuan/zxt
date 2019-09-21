@@ -57,10 +57,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:textColor="@color/white"
+                android:paddingLeft="5dp"
+                android:textColor="@color/red"
                 android:textSize="20sp"
-                tools:text="0次" />
+                tools:text="0" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:text="次"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -68,9 +76,8 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:paddingLeft="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_weight="1">
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
@@ -116,8 +123,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="10dp"
+                android:paddingLeft="5dp"
                 android:text=""
+                android:textColor="@color/red"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:gravity="center_vertical"
+                android:text="次"
+                android:layout_marginLeft="5dp"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
@@ -166,7 +181,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1">
 
             <com.github.mikephil.charting.charts.LineChart

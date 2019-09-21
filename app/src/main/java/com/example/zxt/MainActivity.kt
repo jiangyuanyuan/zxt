@@ -61,6 +61,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     private var newest: BigDecimal = BigDecimal(0)
     private var clicks = 0
 
+    private var mCursorTimerTask: TimerTask? = null
+    private var mCursorTimer: Timer? = null
+    private var mCursorDuration: Long = 10000
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -72,19 +76,19 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         initChart2()
     }
 
-    fun initRv(){
+    fun initRv() {
         recycleView.layoutManager = LinearLayoutManager(this)
         easyAdapter = EasyAdapter(R.layout.item_msg, { itmeView, position, item ->
-            itmeView.tvContent.text = getMyData(item.alarmReason)
+            itmeView.tvContent.text = getMyData(item.alarmType)
             itmeView.tvTime.text = DateUtils.convertTimeToString(item.alarmTime, datePattern)
             when (item.pictureType) {
-                "0" -> {
+                "1" -> {
                     itmeView.tvType.text = "一级警告"
                 }
-                "1" -> {
+                "2" -> {
                     itmeView.tvType.text = "二级警告"
                 }
-                "2" -> {
+                "3" -> {
                     itmeView.tvType.text = "三级警告"
                 }
             }
@@ -104,7 +108,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 for (data in it) {
                     num = num + data.sum
                 }
-                tvNum.text = "$num 次"
+                tvNum.text = "$num"
                 setData(chart, it, 4)
             }
         })
@@ -119,7 +123,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 for (data in it) {
                     num = num + data.sum
                 }
-                tvNumAll.text = "$num 次"
+                tvNumAll.text = "$num"
                 initTu(chart2, 1)
                 setData(chart2, it, 1)
             }
@@ -138,6 +142,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                         if (isAuto == true) {
                             showDialog(it.list?.get(0)?.alarmPictureName)
                         }
+                        initChart1()
                         newest = BigDecimal(it.list?.get(0)?.id)
                     }
                     mList.clear()
@@ -147,7 +152,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             easyAdapter.submitList(mList)
         })
     }
-
 
 
     private fun setData(lineChart: LineChart, list: List<CountBean>, type: Int) {
@@ -163,7 +167,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             } else if (type == 3) {
                 time = DateUtils.stringToLong(data.day + "1230", DateUtils.type1)
             } else if (type == 4) {
-                time = DateUtils.stringToLong(data.day, DateUtils.type1)
+                time = DateUtils.stringToLong(data.day, DateUtils.type4)
             }
             values.add(Entry(time.toFloat(), sum, resources.getDrawable(R.drawable.star)))
 
@@ -224,7 +228,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
             val dataSets = ArrayList<ILineDataSet>()
             dataSets.add(set1) // add the data sets
-
+            var DATA_COUNT = 5
             // create a data object with the data sets
             val data = LineData(dataSets)
 
@@ -232,6 +236,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             lineChart.data = data
         }
     }
+
     override fun onNothingSelected() {}
     override fun onValueSelected(e: Entry?, h: Highlight?) {}
 
@@ -320,7 +325,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                     for (data in it) {
                         num = num + data.sum
                     }
-                    tvNumAll.text = "$num 次"
+                    tvNumAll.text = "$num"
                     initTu(chart2, 1)
                     initTu(chart2, 3)
                     setData(chart2, it, 3)
@@ -337,24 +342,42 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     fun initReceiver() {
-        receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val action = intent.action
-                if (action == Intent.ACTION_TIME_TICK) {
-                    if (System.currentTimeMillis() - temp > 1000 * 60 * 2) {
-                        isAuto = true
-                        pageNum = 1
-                        temp = System.currentTimeMillis()
-                        getDataInfo()
-                    }
+
+        mCursorTimerTask = object : TimerTask() {
+            override fun run() {
+                runOnUiThread {
+                    // 通过光标间歇性显示实现闪烁效果
+                    clicks = 0
+                    isAuto = true
+                    pageNum = 1
+                    temp = System.currentTimeMillis()
+                    getDataInfo()
                 }
             }
         }
+        mCursorTimer = Timer()
+        mCursorTimer?.scheduleAtFixedRate(mCursorTimerTask, 10000L, mCursorDuration)
 
-        val filter = IntentFilter()
-        filter.addAction(Intent.ACTION_TIME_TICK)
-        registerReceiver(receiver, filter)
+//        receiver = object : BroadcastReceiver() {
+//            override fun onReceive(context: Context, intent: Intent) {
+//                val action = intent.action
+//                if (action == Intent.ACTION_TIME_TICK) {
+//                    if (System.currentTimeMillis() - temp > 1000 * 60 * 2) {
+//                        clicks = 0
+//                        isAuto = true
+//                        pageNum = 1
+//                        temp = System.currentTimeMillis()
+//                        getDataInfo()
+//                    }
+//                }
+//            }
+//        }
+
+//        val filter = IntentFilter()
+//        filter.addAction(Intent.ACTION_TIME_TICK)
+//        registerReceiver(receiver, filter)
     }
+
 
     fun showDialog(string: String) {
 
@@ -423,6 +446,11 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         initChart1()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mCursorTimer?.cancel()
+    }
+
     private fun initTu(lineChart: LineChart, type: Int) {
         // background color
         lineChart.setBackgroundColor(Color.WHITE)
@@ -439,7 +467,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         // Set the marker to the lineChart
         mv.setChartView(lineChart)
         lineChart.marker = mv
-
+        lineChart.setAutoScaleMinMaxEnabled(false)
         // enable scaling and dragging
         lineChart.isDragEnabled = true
         lineChart.setScaleEnabled(true)
@@ -464,7 +492,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 var mFormat1 = SimpleDateFormat("M月d")
                 var mFormat2 = SimpleDateFormat("yy年M月")
                 var mFormat3 = SimpleDateFormat("yyyy年")
-                var mFormat4 = SimpleDateFormat("HH:mm")
+                var mFormat4 = SimpleDateFormat("HH时")
                 return when (type) {
                     1 -> mFormat1.format(Date(value.toLong()))
                     2 -> mFormat2.format(Date(value.toLong()))
@@ -517,8 +545,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             // draw limit lines behind data instead of on top
             yAxis.setDrawLimitLinesBehindData(true)
             xAxis.setDrawLimitLinesBehindData(true)
-
         }
+        xAxis.setLabelCount(6)
         // draw points over time
         lineChart.animateX(1500)
 

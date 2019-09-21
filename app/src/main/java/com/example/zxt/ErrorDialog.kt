@@ -5,7 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import com.example.zxt.R
+import com.orhanobut.hawk.Hawk
 import com.tezwez.base.helper.loadFromUrl
 
 import kotlinx.android.synthetic.main.dialog_one_text.*
@@ -50,7 +52,6 @@ private constructor(builder: Builder, context: Context) :
         }
 
 
-
         fun build(): ErrorDialog {
             return ErrorDialog(this, context)
         }
@@ -91,7 +92,8 @@ private constructor(builder: Builder, context: Context) :
      */
     private fun initData() {
         //
-        mImage.loadFromUrl(messageStr)
+        mImage.loadFromUrl(Hawk.get<String>("PHOTO") + "/" + messageStr)
 //        image.loadFromUrl()
+        Toast.makeText(context,Hawk.get<String>("PHOTO") + "/" + messageStr,Toast.LENGTH_LONG).show()
     }
 }
