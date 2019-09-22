@@ -10,14 +10,30 @@ import com.tezwez.base.net.dto.Req
 import com.tezwez.club.data.api.Api
 import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.DataInfo
+import com.tezwez.club.data.dto.MyData
 
 class ApiViewModel(private val api: Api) : ViewModel() {
     val getList = SingleLiveEvent<DataInfo>()
+    val getNewest = SingleLiveEvent<List<MyData>>()
 
     val getCount = SingleLiveEvent<List<CountBean>>()
     val getCountHistory = SingleLiveEvent<List<CountBean>>()
     val getListByMonth = SingleLiveEvent<List<CountBean>>()
     val getListByYear = SingleLiveEvent<List<CountBean>>()
+
+
+
+    /**
+     * 获取最新ID
+     */
+    fun getNewest(
+    ): LiveData<List<MyData>> = let {
+        val req = Req()
+        api.getNewest(req).compose(applySchedulersOnSingle())
+            .subscribe(DataObserver(getNewest))
+        return getNewest
+    }
+
 
     /**
      * 获取列表接口

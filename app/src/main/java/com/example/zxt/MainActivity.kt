@@ -130,6 +130,21 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         })
     }
 
+
+    fun getNewest(){
+        mApiViewModel.getNewest().observe(this,androidx.lifecycle.Observer {
+            if (it?.isNotEmpty()==true){
+                if (BigDecimal(it?.get(0)?.id)>newest){
+                    if (isAuto == true) {
+                        showDialog(it?.get(0)?.alarmPictureName)
+                    }
+                    newest = BigDecimal(it?.get(0)?.id)
+                    getDataInfo()
+                }
+            }
+        })
+    }
+
     fun getDataInfo() {
         mApiViewModel.getList(pageNum, 10).observe(this, androidx.lifecycle.Observer {
 
@@ -138,13 +153,14 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 hasPreviousPage = it.hasPreviousPage
                 total = it.total?.toInt()
                 if (!it.list.isEmpty()) {
-                    if (BigDecimal(it.list?.get(0)?.id) > newest) {
-                        if (isAuto == true) {
-                            showDialog(it.list?.get(0)?.alarmPictureName)
-                        }
-                        initChart1()
-                        newest = BigDecimal(it.list?.get(0)?.id)
-                    }
+//                    if (BigDecimal(it.list?.get(0)?.id) > newest) {
+//                        if (isAuto == true) {
+//                            showDialog(it.list?.get(0)?.alarmPictureName)
+//                        }
+//                        initChart1()
+//                        newest = BigDecimal(it.list?.get(0)?.id)
+//                    }
+                    initChart1()
                     mList.clear()
                     mList.addAll(it?.list)
                 }
@@ -351,7 +367,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                     isAuto = true
                     pageNum = 1
                     temp = System.currentTimeMillis()
-                    getDataInfo()
+                    getNewest()
                 }
             }
         }
