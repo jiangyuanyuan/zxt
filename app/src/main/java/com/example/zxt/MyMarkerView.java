@@ -45,21 +45,30 @@ public class MyMarkerView extends MarkerView {
             switch (mType) {
                 case 1:
                     mFormat = "日";
+                    tvContent.setText(((int) e.getX())+ mFormat);
                     break;
                 case 2:
                     mFormat = "月";
+                    tvContent.setText(((int) e.getX())+ mFormat);
                     break;
                 case 3:
                     mFormat = "年";
+                    if((int) e.getX() < 10){
+                        tvContent.setText("0"+((int) e.getX())+ mFormat);
+                    }else{
+                        tvContent.setText(((int) e.getX())+ mFormat);
+                    }
                     break;
                 case 4:
                     mFormat = "时";
+                    tvContent.setText(((int) e.getX())+ mFormat);
                     break;
                 default:
                     mFormat = "日";
+                    tvContent.setText(((int) e.getX())+ mFormat);
                     break;
             }
-            tvContent.setText(e.getX()+ mFormat);
+
             num.setText(Utils.formatNumber(e.getY(), 0, true));
         }
 
