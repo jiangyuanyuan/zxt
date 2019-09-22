@@ -17,16 +17,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="@color/c1"
+            android:background="#7faced"
             android:paddingTop="30dp">
 
-            <ImageView
-                android:id="@+id/tvTitleClick"
-                android:layout_width="120dp"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginLeft="30dp"
-                android:src="@drawable/icon_title" />
+                android:paddingLeft="20dp"
+                android:text="在押人员行为智能监管系统"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+
+
         </LinearLayout>
+        <View android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/common_white"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -147,6 +155,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_selector"
                 android:text="日"
+                android:textStyle="bold"
                 android:textColor="@drawable/textcolor_selector" />
 
             <Button
@@ -160,6 +169,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_selector"
                 android:text="月"
+                android:textStyle="bold"
                 android:textColor="@drawable/textcolor_selector" />
 
             <Button
@@ -173,6 +183,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_selector"
                 android:text="年"
+                android:textStyle="bold"
                 android:textColor="@drawable/textcolor_selector" />
 
 
@@ -212,16 +223,25 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="#7faced"
-            android:gravity="center"
+            android:gravity="right"
             android:paddingTop="30dp">
 
-            <TextView
-                android:layout_width="match_parent"
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:paddingLeft="20dp"-->
+<!--                android:text="监仓异常预警系统"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="30sp" />-->
+
+            <ImageView
+                android:id="@+id/tvTitleClick"
+                android:layout_width="120dp"
                 android:layout_height="40dp"
-                android:paddingLeft="20dp"
-                android:text="监仓异常预警系统"
-                android:textColor="@color/white"
-                android:textSize="30sp" />
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/icon_title" />
+
         </LinearLayout>
 
 
@@ -237,8 +257,11 @@
                 style="@style/text_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
+                android:textStyle="bold"
                 android:text="首页" />
 
             <Button
@@ -248,6 +271,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:textStyle="bold"
                 android:text="上一页" />
 
             <Button
@@ -257,6 +281,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:textStyle="bold"
                 android:text="下一页" />
 
             <View
@@ -281,8 +306,11 @@
                 style="@style/text_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
+                android:textStyle="bold"
                 android:text="末页" />
 
 
