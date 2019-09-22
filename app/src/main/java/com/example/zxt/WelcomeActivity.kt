@@ -2,20 +2,13 @@ package com.example.zxt
 
 
 
+
 import android.content.Intent
 import android.os.Bundle
-
-import com.orhanobut.hawk.Hawk
-import com.tezwez.base.*
 import com.tezwez.base.common.BaseActivity
-
-
-
-
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class WelcomeActivity : BaseActivity() {

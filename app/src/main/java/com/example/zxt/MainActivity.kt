@@ -1,35 +1,30 @@
 package com.example.zxt
 
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Color
-import android.graphics.DashPathEffect
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
 import com.be.base.view.ErrorDialog
 import com.example.zxt.DateUtils.datePattern
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.Utils
-import com.tencent.bugly.proguard.t
-import com.tezwez.base.common.BaseActivity
+import com.github.mikephil.charting.model.GradientColor
 import com.tezwez.base.helper.click
-import com.tezwez.base.helper.loadFromUrl
 import com.tezwez.base.helper.loge
 import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.MyData
@@ -37,12 +32,10 @@ import com.tezwez.club.data.vm.ApiViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.custom_marker_view.*
 import kotlinx.android.synthetic.main.item_msg.view.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.math.BigDecimal
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -64,10 +57,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     private var mCursorTimerTask: TimerTask? = null
     private var mCursorTimer: Timer? = null
     private var mCursorDuration: Long = 10000
+    protected lateinit var tfLight: Typeface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        tfLight = Typeface.createFromAsset(assets, "OpenSans-Light.ttf")
         initRv()
         getDataInfo()
         initEvent()
@@ -152,88 +147,55 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             easyAdapter.submitList(mList)
         })
     }
-
-
-    private fun setData(lineChart: LineChart, list: List<CountBean>, type: Int) {
-        val values = ArrayList<Entry>()
+    private fun setData(lineChart: BarChart, list: List<CountBean>, type: Int) {
+        val values = ArrayList<BarEntry>()
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
-            var time: Long = 0
-            if (type == 1) {
-                time = DateUtils.stringToLong(data.day, DateUtils.type1)
-            } else if (type == 2) {
-                time = DateUtils.stringToLong(data.day + "15", DateUtils.type1)
-            } else if (type == 3) {
-                time = DateUtils.stringToLong(data.day + "1230", DateUtils.type1)
-            } else if (type == 4) {
-                time = DateUtils.stringToLong(data.day, DateUtils.type4)
-            }
-            values.add(Entry(time.toFloat(), sum, resources.getDrawable(R.drawable.star)))
-
+            var value = data.day.substring(data.day.length-2,data.day.length)
+            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
         }
+        val set1: BarDataSet
 
-        val set1: LineDataSet
-
-        if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
-            set1 = lineChart.data.getDataSetByIndex(0) as LineDataSet
+        if (chart.data != null && chart.data.dataSetCount > 0) {
+            set1 = chart.data.getDataSetByIndex(0) as BarDataSet
             set1.values = values
-            set1.notifyDataSetChanged()
-            lineChart.data.notifyDataChanged()
-            lineChart.notifyDataSetChanged()
+            chart.data.notifyDataChanged()
+            chart.notifyDataSetChanged()
+
         } else {
-            // create a dataset and give it a type
-            set1 = LineDataSet(values, "DataSet 1")
-
+            set1 = BarDataSet(values, "告警次数")
             set1.setDrawIcons(false)
+            val startColor1 = ContextCompat.getColor(this, android.R.color.holo_orange_light)
+            val startColor2 = ContextCompat.getColor(this, android.R.color.holo_blue_light)
+            val startColor3 = ContextCompat.getColor(this, android.R.color.holo_orange_light)
+            val startColor4 = ContextCompat.getColor(this, android.R.color.holo_green_light)
+            val startColor5 = ContextCompat.getColor(this, android.R.color.holo_red_light)
+            val endColor1 = ContextCompat.getColor(this, android.R.color.holo_blue_dark)
+            val endColor2 = ContextCompat.getColor(this, android.R.color.holo_purple)
+            val endColor3 = ContextCompat.getColor(this, android.R.color.holo_green_dark)
+            val endColor4 = ContextCompat.getColor(this, android.R.color.holo_red_dark)
+            val endColor5 = ContextCompat.getColor(this, android.R.color.holo_orange_dark)
 
-            // draw dashed line
-            set1.enableDashedLine(10f, 5f, 0f)
+            val gradientColors = ArrayList<GradientColor>()
+            gradientColors.add(GradientColor(startColor1, endColor1))
+            gradientColors.add(GradientColor(startColor2, endColor2))
+            gradientColors.add(GradientColor(startColor3, endColor3))
+            gradientColors.add(GradientColor(startColor4, endColor4))
+            gradientColors.add(GradientColor(startColor5, endColor5))
 
-            // black lines and points
-            set1.color = Color.BLACK
-            set1.setCircleColor(Color.BLACK)
+            set1.gradientColors = gradientColors
 
-            // line thickness and point size
-            set1.lineWidth = 1f
-            set1.circleRadius = 3f
+            val dataSets = ArrayList<IBarDataSet>()
+            dataSets.add(set1)
 
-            // draw points as solid circles
-            set1.setDrawCircleHole(false)
+            val data = BarData(dataSets)
+            data.setValueTextSize(10f)
+            data.setValueTypeface(tfLight)
+            data.barWidth = 0.9f
 
-            // customize legend entry
-            set1.formLineWidth = 1f
-            set1.formLineDashEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
-            set1.formSize = 15f
-
-            // text size of values
-            set1.valueTextSize = 9f
-
-            // draw selection line as dashed
-            set1.enableDashedHighlightLine(10f, 5f, 0f)
-
-            // set the filled area
-            set1.setDrawFilled(true)
-            set1.fillFormatter =
-                IFillFormatter { dataSet, dataProvider -> lineChart.axisLeft.axisMinimum }
-
-            // set color of filled area
-            if (Utils.getSDKInt() >= 18) {
-                // drawables only supported on api level 18 and above
-                val drawable = ContextCompat.getDrawable(this, R.drawable.fade_red)
-                set1.fillDrawable = drawable
-            } else {
-                set1.fillColor = Color.BLACK
-            }
-
-            val dataSets = ArrayList<ILineDataSet>()
-            dataSets.add(set1) // add the data sets
-            var DATA_COUNT = 5
-            // create a data object with the data sets
-            val data = LineData(dataSets)
-
-            // set data
-            lineChart.data = data
+            chart.data = data
+            chart.setVisibleXRangeMaximum(20f)
         }
     }
 
@@ -357,25 +319,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         }
         mCursorTimer = Timer()
         mCursorTimer?.scheduleAtFixedRate(mCursorTimerTask, 10000L, mCursorDuration)
-
-//        receiver = object : BroadcastReceiver() {
-//            override fun onReceive(context: Context, intent: Intent) {
-//                val action = intent.action
-//                if (action == Intent.ACTION_TIME_TICK) {
-//                    if (System.currentTimeMillis() - temp > 1000 * 60 * 2) {
-//                        clicks = 0
-//                        isAuto = true
-//                        pageNum = 1
-//                        temp = System.currentTimeMillis()
-//                        getDataInfo()
-//                    }
-//                }
-//            }
-//        }
-
-//        val filter = IntentFilter()
-//        filter.addAction(Intent.ACTION_TIME_TICK)
-//        registerReceiver(receiver, filter)
     }
 
 
@@ -451,7 +394,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         mCursorTimer?.cancel()
     }
 
-    private fun initTu(lineChart: LineChart, type: Int) {
+    private fun initTu(lineChart: BarChart, type: Int) {
         // background color
         lineChart.setBackgroundColor(Color.WHITE)
         // disable description text
@@ -489,16 +432,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                var mFormat1 = SimpleDateFormat("M月d")
-                var mFormat2 = SimpleDateFormat("yy年M月")
-                var mFormat3 = SimpleDateFormat("yyyy年")
-                var mFormat4 = SimpleDateFormat("HH时")
                 return when (type) {
-                    1 -> mFormat1.format(Date(value.toLong()))
-                    2 -> mFormat2.format(Date(value.toLong()))
-                    3 -> mFormat3.format(Date(value.toLong()))
-                    4 -> mFormat4.format(Date(value.toLong()))
-                    else -> mFormat1.format(Date(value.toLong()))
+                    1 ->  "${value.toInt()}日"
+                    2 -> "${value.toInt()}月"
+                    3 -> "${value.toInt()}年"
+                    4 -> "${value.toInt()}时"
+                    else ->"${value.toInt()}日"
                 }
             }
         })

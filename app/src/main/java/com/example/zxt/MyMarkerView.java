@@ -12,9 +12,6 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Custom implementation of the MarkerView.
  *
@@ -44,25 +41,25 @@ public class MyMarkerView extends MarkerView {
 
             tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
-            SimpleDateFormat mFormat = null;
+            String mFormat = null;
             switch (mType) {
                 case 1:
-                    mFormat = new SimpleDateFormat("M月d");
+                    mFormat = "日";
                     break;
                 case 2:
-                    mFormat = new SimpleDateFormat("yy年M月");
+                    mFormat = "月";
                     break;
                 case 3:
-                    mFormat = new SimpleDateFormat("yyyy年");
+                    mFormat = "年";
                     break;
                 case 4:
-                    mFormat = new SimpleDateFormat("HH时");
+                    mFormat = "时";
                     break;
                 default:
-                    mFormat = new SimpleDateFormat("M月d");
+                    mFormat = "日";
                     break;
             }
-            tvContent.setText(mFormat.format(new Date((long) e.getX())));
+            tvContent.setText(e.getX()+ mFormat);
             num.setText(Utils.formatNumber(e.getY(), 0, true));
         }
 
