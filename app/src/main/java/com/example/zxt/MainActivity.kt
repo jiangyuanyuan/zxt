@@ -137,7 +137,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                         if (isAuto == true) {
                             showDialog(it.list?.get(0)?.alarmPictureName)
                         }
-                        initChart1()
+//                        initChart1()
                         newest = BigDecimal(it.list?.get(0)?.id)
                     }
                     mList.clear()
@@ -157,11 +157,11 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         }
         val set1: BarDataSet
 
-        if (chart.data != null && chart.data.dataSetCount > 0) {
-            set1 = chart.data.getDataSetByIndex(0) as BarDataSet
+        if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
+            set1 = lineChart.data.getDataSetByIndex(0) as BarDataSet
             set1.values = values
-            chart.data.notifyDataChanged()
-            chart.notifyDataSetChanged()
+            lineChart.data.notifyDataChanged()
+            lineChart.notifyDataSetChanged()
 
         } else {
             set1 = BarDataSet(values, "告警次数")
@@ -194,8 +194,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             data.setValueTypeface(tfLight)
             data.barWidth = 0.9f
 
-            chart.data = data
-            chart.setVisibleXRangeMaximum(20f)
+            lineChart.data = data
+            lineChart.setVisibleXRangeMaximum(20f)
         }
     }
 
@@ -255,7 +255,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                     }
                     tvNumAll.text = "$num 次"
                     initTu(chart2, 1)
-                    initTu(chart2, 1)
                     setData(chart2, it, 1)
                 }
             })
@@ -271,7 +270,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                         num = num + data.sum
                     }
                     tvNumAll.text = "$num 次"
-                    initTu(chart2, 1)
                     initTu(chart2, 2)
                     setData(chart2, it, 2)
                 }
@@ -281,14 +279,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             day.isSelected = false
             month.isSelected = false
             year.isSelected = true
-            mApiViewModel.getListByYear(20).observe(this, androidx.lifecycle.Observer {
+            mApiViewModel.getListByYear(10).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
                     for (data in it) {
                         num = num + data.sum
                     }
                     tvNumAll.text = "$num"
-                    initTu(chart2, 1)
                     initTu(chart2, 3)
                     setData(chart2, it, 3)
                 }
@@ -386,7 +383,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     override fun onResume() {
         super.onResume()
         //todo  初始化数据
-        initChart1()
+//        initChart1()
     }
 
     override fun onDestroy() {
@@ -435,7 +432,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 return when (type) {
                     1 ->  "${value.toInt()}日"
                     2 -> "${value.toInt()}月"
-                    3 -> "${value.toInt()}年"
+                    3 -> "${if(value < 10) 0+(value.toInt()) else value.toInt()}年"
                     4 -> "${value.toInt()}时"
                     else ->"${value.toInt()}日"
                 }
