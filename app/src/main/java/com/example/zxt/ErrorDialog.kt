@@ -94,6 +94,6 @@ private constructor(builder: Builder, context: Context) :
         //
         mImage.loadFromUrl(Hawk.get<String>("PHOTO") + "/" + messageStr)
 //        image.loadFromUrl()
-        Toast.makeText(context,Hawk.get<String>("PHOTO") + "/" + messageStr,Toast.LENGTH_LONG).show()
+//        Toast.makeText(context,Hawk.get<String>("PHOTO") + "/" + messageStr,Toast.LENGTH_LONG).show()
     }
 }

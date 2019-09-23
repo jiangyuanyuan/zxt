@@ -112,7 +112,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     fun initChart2() {
         initTu(chart2, 1)
         day.isSelected = true
-        mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
+        mApiViewModel.getListByTimeHistory(22).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
                 var num = 0
                 for (data in it) {
@@ -248,6 +248,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             data.setValueTypeface(tfLight)
             data.barWidth = 0.9f
 
+            data.setValueFormatter(object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    var str = value.toString()
+                    if(str.isEmpty()){
+                        return str
+                    }
+                    return str.substring(0, str.indexOf("."))
+                }
+            })
+
             lineChart.data = data
             lineChart.setVisibleXRangeMaximum(30f)
         }
@@ -301,7 +311,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             day.isSelected = true
             month.isSelected = false
             year.isSelected = false
-            mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
+            mApiViewModel.getListByTimeHistory(22).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
                     for (data in it) {
