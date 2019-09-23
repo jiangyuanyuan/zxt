@@ -169,7 +169,34 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             var data = list.get(i)
             var sum = data.sum.toFloat()
             var value = data.day.substring(data.day.length-2,data.day.length)
-            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+
+            if(type == 4){
+                for (index in i..24){
+                    if(BigDecimal(value)>BigDecimal(i+1)){
+                        values.add(BarEntry((i+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(i)){
+                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+                        break
+                    }
+                }
+            }else if(type == 1){
+                //日
+
+            }else if(type == 2){
+                //月
+                for (index in i..12){
+                    if(BigDecimal(value)>BigDecimal(i+1)){
+                        values.add(BarEntry((i+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(i+1)){
+                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+                        break
+                    }
+                }
+            }else if(type == 3){
+                //年
+
+            }
+//            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
         }
         val set1: BarDataSet
 
