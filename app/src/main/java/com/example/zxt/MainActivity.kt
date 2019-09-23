@@ -165,36 +165,47 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
     private fun setData(lineChart: BarChart, list: List<CountBean>, type: Int) {
         val values = ArrayList<BarEntry>()
+        var temp = 0
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
             var value = data.day.substring(data.day.length-2,data.day.length)
-
             if(type == 4){
-                for (index in i..24){
-                    if(BigDecimal(value)>BigDecimal(i+1)){
-                        values.add(BarEntry((i+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
-                    }else if(BigDecimal(value) == BigDecimal(i)){
+                for (index in temp..24){
+                    if(BigDecimal(value)>BigDecimal(index+1)){
+                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(index)){
+                        temp = value.toInt()
                         values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
                         break
                     }
                 }
             }else if(type == 1){
                 //日
-
+                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
             }else if(type == 2){
                 //月
-                for (index in i..12){
-                    if(BigDecimal(value)>BigDecimal(i+1)){
-                        values.add(BarEntry((i+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
-                    }else if(BigDecimal(value) == BigDecimal(i+1)){
+                for (index in temp..12){
+                    if(BigDecimal(value)>BigDecimal(index+1)){
+                        loge("$temp>-------->${(index+1)}")
+                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(index+1)){
+                        loge("$temp==-------->${(value.toFloat())}")
+                        temp = value.toInt()
                         values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
                         break
                     }
                 }
             }else if(type == 3){
                 //年
-
+                for (index in 10..30){
+                    if(BigDecimal(value)>BigDecimal(index+1)){
+                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(index+1)){
+                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+                        break
+                    }
+                }
             }
 //            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
         }
@@ -238,7 +249,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             data.barWidth = 0.9f
 
             lineChart.data = data
-            lineChart.setVisibleXRangeMaximum(20f)
+            lineChart.setVisibleXRangeMaximum(30f)
         }
     }
 
