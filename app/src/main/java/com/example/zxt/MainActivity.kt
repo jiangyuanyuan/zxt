@@ -88,7 +88,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             }
             itmeView.tvShowImg.click {
-                showDialog(item.alarmPictureName)
+                showDialog(item.alarmPictureName, item.parse)
             }
         }, emptyList())
         recycleView.adapter = easyAdapter
@@ -126,12 +126,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-    fun getNewest(){
-        mApiViewModel.getNewest().observe(this,androidx.lifecycle.Observer {
-            if (it?.isNotEmpty()==true){
-                if (BigDecimal(it?.get(0)?.id)>newest){
+    fun getNewest() {
+        mApiViewModel.getNewest().observe(this, androidx.lifecycle.Observer {
+            if (it?.isNotEmpty() == true) {
+                if (BigDecimal(it?.get(0)?.id) > newest) {
                     if (isAuto == true) {
-                        showDialog(it?.get(0)?.alarmPictureName)
+                        showDialog(it?.get(0)?.alarmPictureName, it?.get(0)?.parse)
                     }
                     newest = BigDecimal(it?.get(0)?.id)
                     getDataInfo()
@@ -163,46 +163,83 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             easyAdapter.submitList(mList)
         })
     }
+
     private fun setData(lineChart: BarChart, list: List<CountBean>, type: Int) {
         val values = ArrayList<BarEntry>()
         var temp = 0
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
-            var value = data.day.substring(data.day.length-2,data.day.length)
-            if(type == 4){
-                for (index in temp..24){
-                    if(BigDecimal(value)>BigDecimal(index+1)){
-                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
-                    }else if(BigDecimal(value) == BigDecimal(index)){
+            var value = data.day.substring(data.day.length - 2, data.day.length)
+            if (type == 4) {
+                for (index in temp..24) {
+                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+                        values.add(
+                            BarEntry(
+                                (index + 1).toFloat(),
+                                0f,
+                                resources.getDrawable(R.drawable.star)
+                            )
+                        )
+                    } else if (BigDecimal(value) == BigDecimal(index)) {
                         temp = value.toInt()
-                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+                        values.add(
+                            BarEntry(
+                                value.toFloat(),
+                                sum,
+                                resources.getDrawable(R.drawable.star)
+                            )
+                        )
                         break
                     }
                 }
-            }else if(type == 1){
+            } else if (type == 1) {
                 //日
                 values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
-            }else if(type == 2){
+            } else if (type == 2) {
                 //月
-                for (index in temp..12){
-                    if(BigDecimal(value)>BigDecimal(index+1)){
-                        loge("$temp>-------->${(index+1)}")
-                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
-                    }else if(BigDecimal(value) == BigDecimal(index+1)){
+                for (index in temp..12) {
+                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+                        loge("$temp>-------->${(index + 1)}")
+                        values.add(
+                            BarEntry(
+                                (index + 1).toFloat(),
+                                0f,
+                                resources.getDrawable(R.drawable.star)
+                            )
+                        )
+                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
                         loge("$temp==-------->${(value.toFloat())}")
                         temp = value.toInt()
-                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+                        values.add(
+                            BarEntry(
+                                value.toFloat(),
+                                sum,
+                                resources.getDrawable(R.drawable.star)
+                            )
+                        )
                         break
                     }
                 }
-            }else if(type == 3){
+            } else if (type == 3) {
                 //年
-                for (index in 10..30){
-                    if(BigDecimal(value)>BigDecimal(index+1)){
-                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
-                    }else if(BigDecimal(value) == BigDecimal(index+1)){
-                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+                for (index in 10..30) {
+                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+                        values.add(
+                            BarEntry(
+                                (index + 1).toFloat(),
+                                0f,
+                                resources.getDrawable(R.drawable.star)
+                            )
+                        )
+                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
+                        values.add(
+                            BarEntry(
+                                value.toFloat(),
+                                sum,
+                                resources.getDrawable(R.drawable.star)
+                            )
+                        )
                         break
                     }
                 }
@@ -251,7 +288,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             data.setValueFormatter(object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     var str = value.toString()
-                    if(str.isEmpty()){
+                    if (str.isEmpty()) {
                         return str
                     }
                     return str.substring(0, str.indexOf("."))
@@ -383,10 +420,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-    fun showDialog(string: String) {
+    fun showDialog(string: String, string2: String) {
 
         var dialog = ErrorDialog.Builder(this)
-            .message(string)
+            .message(string, string2)
             .setNegativeButton { dialog ->
                 dialog.dismiss()
             }.build()
@@ -494,11 +531,11 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 return when (type) {
-                    1 ->  "${value.toInt()}日"
+                    1 -> "${value.toInt()}日"
                     2 -> "${value.toInt()}月"
-                    3 -> "${if(value < 10) 0+(value.toInt()) else value.toInt()}年"
+                    3 -> "${if (value < 10) 0 + (value.toInt()) else value.toInt()}年"
                     4 -> "${value.toInt()}时"
-                    else ->"${value.toInt()}日"
+                    else -> "${value.toInt()}日"
                 }
             }
         })

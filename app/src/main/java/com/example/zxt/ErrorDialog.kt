@@ -19,6 +19,7 @@ private constructor(builder: Builder, context: Context) :
 
 
     private var messageStr: String?
+    private var messageStr2: String?
     private var canCannel: Boolean? = true
 //    private var mTextView: TextView? = null
     /*  -------------------------------- 接口监听 -------------------------------------  */
@@ -27,17 +28,20 @@ private constructor(builder: Builder, context: Context) :
 
     init {
         this.messageStr = builder.messageStr
+        this.messageStr2 = builder.messageStr2
         this.canCannel = builder.canCannel
         this.noOnclickListener = builder.mNoOnclickListener
     }
 
     class Builder(private val context: Context) {
         var messageStr: String? = null
+        var messageStr2: String? = null
         var canCannel: Boolean? = true
         var mNoOnclickListener: ((dialog: ErrorDialog) -> Unit?)? = null
 
-        fun message(message: String): Builder {
+        fun message(message: String, message2: String): Builder {
             this.messageStr = message
+            this.messageStr2 = message2
             return this
         }
 
@@ -93,7 +97,12 @@ private constructor(builder: Builder, context: Context) :
     private fun initData() {
         //
         mImage.loadFromUrl(Hawk.get<String>("PHOTO") + "/" + messageStr)
+        mImage2.loadFromUrl(Hawk.get<String>("PHOTO") + "/" + messageStr2)
 //        image.loadFromUrl()
-//        Toast.makeText(context,Hawk.get<String>("PHOTO") + "/" + messageStr,Toast.LENGTH_LONG).show()
+//        Toast.makeText(
+//            context,
+//            Hawk.get<String>("PHOTO") + "/" + messageStr + "---2---" + messageStr2,
+//            Toast.LENGTH_LONG
+//        ).show()
     }
 }
