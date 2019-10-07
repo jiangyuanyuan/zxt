@@ -3,8 +3,10 @@ package com.example.zxt
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -111,7 +113,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     fun initChart2() {
-        initTu(chart2, 1)
+//        initTu(chart2, 1)
         day.isSelected = true
         mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
@@ -142,7 +144,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     fun getDataInfo() {
-        if (pageNum>2) return
         mApiViewModel.getList(pageNum, 10).observe(this, androidx.lifecycle.Observer {
 
             if (it != null) {
@@ -207,17 +208,27 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             }else if(type == 3){
                 //年
-                for (index in 10..30){
+                for (index in 11..21){
                     if(BigDecimal(value)>BigDecimal(index+1)){
+                        Log.d("tag>>>>>>22","$type --- ${(index+1).toFloat()}")
                         values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
                     }else if(BigDecimal(value) == BigDecimal(index+1)){
+                        Log.d("tag>>>>>>33","$type --- ${value.toFloat()}")
                         values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
                         break
                     }
                 }
+
+//                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+
             }
 //            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
         }
+
+        for (value in values){
+            Log.d("tag>>>>>>44","$type --- ${value.x}")
+        }
+
         val set1: BarDataSet
 
         if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
@@ -305,12 +316,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 pageNum = total / 10 + 1
                 getDataInfo()
             }
+            startActivity(Intent(this, PieActivity::class.java))
         }
         day.click {
             day.isSelected = true
             month.isSelected = false
             year.isSelected = false
-            mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
+            mApiViewModel.getListByTimeHistory(7).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
                     for (data in it) {
@@ -455,6 +467,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     private fun initTu(lineChart: BarChart, type: Int) {
+        lineChart.setScaleMinima(1.0f,1.0f)
+        lineChart.viewPortHandler.refresh(Matrix(),lineChart,true)
         // background color
         lineChart.setBackgroundColor(Color.WHITE)
         // disable description text
@@ -492,12 +506,19 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
+                Log.d("tag>>>>>>","$type --- ${value}")
                 return when (type) {
-                    1 ->  "${value.toInt()}日"
-                    2 -> "${value.toInt()}月"
-                    3 -> "${if(value < 10) 0+(value.toInt()) else value.toInt()}年"
-                    4 -> "${value.toInt()}时"
-                    else ->"${value.toInt()}日"
+//                    1 ->  "${value.toInt()}日"
+//                    2 -> "${value.toInt()}月"
+//                    3 -> "${if(value < 10) 0+(value.toInt()) else value.toInt()}年"
+//                    4 -> "${value.toInt()}时"
+//                    else ->"${value.toInt()}日"
+
+                    1 ->  "${value.toInt()}"
+                    2 -> "${value.toInt()}"
+                    3 -> "${if(value < 10) 0+(value.toInt()) else value.toInt()}"
+                    4 -> "${value.toInt()}"
+                    else ->"${value.toInt()}"
                 }
             }
         })
@@ -545,7 +566,28 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             yAxis.setDrawLimitLinesBehindData(true)
             xAxis.setDrawLimitLinesBehindData(true)
         }
-        xAxis.setLabelCount(6)
+        xAxis.axisMinimum = when(type){
+            1 -> 7f
+            2 -> 1f
+            3 -> 11f
+            4 -> 24f
+            else -> 7f
+        }
+
+        xAxis.mAxisMaximum = when(type){
+            1 -> 7f
+            2 -> 12f
+            3 -> 21f
+            4 -> 24f
+            else -> 7f
+        }
+        xAxis.labelCount = when(type){
+            1 -> 7
+            2 -> 12
+            3 -> 9
+            4 -> 24
+            else -> 7
+        }
         // draw points over time
         lineChart.animateX(1500)
 

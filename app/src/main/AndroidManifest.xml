@@ -13,9 +13,10 @@
         android:theme="@style/ClubAppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:label,android:allowBackup">
-        <activity android:name=".Main2Activity"
-            android:screenOrientation="landscape"></activity>
-
+        <activity android:name=".PieActivity"></activity>
+        <activity
+            android:name=".Main2Activity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".SecondActivity"
             android:screenOrientation="landscape" />
