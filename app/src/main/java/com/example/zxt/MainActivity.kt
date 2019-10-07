@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
@@ -141,6 +142,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     fun getDataInfo() {
+        if (pageNum>2) return
         mApiViewModel.getList(pageNum, 10).observe(this, androidx.lifecycle.Observer {
 
             if (it != null) {
@@ -161,6 +163,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             }
             easyAdapter.submitList(mList)
+            if (mList.isNullOrEmpty()){
+                noDateTv.visibility = View.VISIBLE
+            }else {
+                noDateTv.visibility = View.GONE
+            }
+
+
         })
     }
     private fun setData(lineChart: BarChart, list: List<CountBean>, type: Int) {
