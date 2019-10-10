@@ -30,8 +30,8 @@
     <color name="multiple_image_select_primaryDark">#000000</color>
     <!--选中-->
     <color name="multiple_image_select_primary">#42474E</color>
-    <color name="common_blue">#03a9f4</color>
-    <color name="common_blue99">#9903a9f4</color>
+    <color name="common_blue">#63aef0</color>
+    <color name="common_blue99">#9963aef0</color>
     <color name="transparent">#00000000</color>
     <color name="common_disable">#d9d9d9</color>
     <color name="common_white">#ffffff</color>

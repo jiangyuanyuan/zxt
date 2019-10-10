@@ -321,7 +321,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         day.click {
             day.isSelected = true
             month.isSelected = false
-            year.isSelected = false
+//            year.isSelected = false
             mApiViewModel.getListByTimeHistory(7).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
@@ -337,7 +337,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         month.click {
             day.isSelected = false
             month.isSelected = true
-            year.isSelected = false
+//            year.isSelected = false
             mApiViewModel.getListByMonth(12).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
@@ -350,22 +350,22 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             })
         }
-        year.click {
-            day.isSelected = false
-            month.isSelected = false
-            year.isSelected = true
-            mApiViewModel.getListByYear(10).observe(this, androidx.lifecycle.Observer {
-                if (it?.isEmpty()?.not() == true) {
-                    var num = 0
-                    for (data in it) {
-                        num = num + data.sum
-                    }
-                    tvNumAll.text = "$num"
-                    initTu(chart2, 3)
-                    setData(chart2, it, 3)
-                }
-            })
-        }
+//        year.click {
+//            day.isSelected = false
+//            month.isSelected = false
+//            year.isSelected = true
+//            mApiViewModel.getListByYear(10).observe(this, androidx.lifecycle.Observer {
+//                if (it?.isEmpty()?.not() == true) {
+//                    var num = 0
+//                    for (data in it) {
+//                        num = num + data.sum
+//                    }
+//                    tvNumAll.text = "$num"
+//                    initTu(chart2, 3)
+//                    setData(chart2, it, 3)
+//                }
+//            })
+//        }
         tvTitleClick.click {
             clicks++
             if (clicks > 7) {
