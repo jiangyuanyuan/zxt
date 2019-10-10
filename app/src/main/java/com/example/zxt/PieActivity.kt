@@ -37,7 +37,7 @@ class PieActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pie)
         initEvent()
         initPieChart()
-        getData(7,1)
+        getData(1,0)
 
     }
 
@@ -53,7 +53,7 @@ class PieActivity : AppCompatActivity() {
         pieChart.setCenterTextTypeface(tfLight)
         pieChart.setCenterText(generateCenterSpannableText())
 
-        pieChart.setDrawHoleEnabled(true)
+        pieChart.setDrawHoleEnabled(false)
         pieChart.setHoleColor(Color.WHITE)
 
         pieChart.setTransparentCircleColor(Color.WHITE)
@@ -84,8 +84,8 @@ class PieActivity : AppCompatActivity() {
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT)
         l.setOrientation(Legend.LegendOrientation.VERTICAL)
         l.setDrawInside(false)
-        l.formSize = 12f
-        l.textSize = 12f
+        l.formSize = 20f
+        l.textSize = 20f
         l.setXEntrySpace(20f)
         l.setYEntrySpace(20f)
 //        l.setYOffset(0f)
@@ -155,8 +155,8 @@ class PieActivity : AppCompatActivity() {
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter(pieChart))
-        data.setValueTextSize(12f)
-        data.setValueTextColor(Color.WHITE)
+        data.setValueTextSize(20f)
+        data.setValueTextColor(Color.RED)
         data.setValueTypeface(tfLight)
         pieChart.setData(data)
 
@@ -168,13 +168,13 @@ class PieActivity : AppCompatActivity() {
 
     fun initEvent(){
         day.click {
-            getData(12,0)
+            getData(1,0)
         }
         month.click {
-            getData(2,1)
+            getData(7,0)
         }
         year.click {
-            getData(5,2)
+            getData(30,0)
         }
     }
 

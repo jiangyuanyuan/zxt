@@ -316,7 +316,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 pageNum = total / 10 + 1
                 getDataInfo()
             }
-            startActivity(Intent(this, PieActivity::class.java))
+            startActivity(Intent(this, Main2Activity::class.java))
         }
         day.click {
             day.isSelected = true
