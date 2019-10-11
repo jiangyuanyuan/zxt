@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
 import com.be.base.view.ErrorDialog
-import com.example.zxt.DateUtils.FORMAT_SHORT
 import com.example.zxt.DateUtils.datePattern
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -45,8 +44,6 @@ import kotlinx.android.synthetic.main.item_msg.view.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.math.BigDecimal
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -143,7 +140,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 for (data in it) {
                     num = num + data.sum
                 }
-//                tvNumAll.text = "$num"
+                tvNumAll.text = "$num"
                 initTu(chart2, 1)
                 setData(chart2, it, 1)
             }
@@ -477,12 +474,14 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
             set1 = lineChart.data.getDataSetByIndex(0) as BarDataSet
             set1.values = values
+            set1.setDrawValues(false)
             lineChart.data.notifyDataChanged()
             lineChart.notifyDataSetChanged()
 
         } else {
             set1 = BarDataSet(values, "告警次数")
             set1.setDrawIcons(false)
+            set1.setDrawValues(false)
             val startColor1 = ContextCompat.getColor(this, android.R.color.holo_orange_light)
             val startColor2 = ContextCompat.getColor(this, android.R.color.holo_blue_light)
             val startColor3 = ContextCompat.getColor(this, android.R.color.holo_orange_light)
@@ -513,6 +512,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
             lineChart.data = data
             lineChart.setVisibleXRangeMaximum(30f)
+            lineChart.invalidate()
         }
     }
 
@@ -526,10 +526,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         }
         arrayList.reverse()
+        if(daySum == 7) {
+            mList1 = arrayList
+        }else if(daySum == 30){
+            mList2 = arrayList
+        }
         return arrayList
     }
-
-
     override fun onNothingSelected() {}
     override fun onValueSelected(e: Entry?, h: Highlight?) {}
 
@@ -724,6 +727,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     private fun initTu(lineChart: BarChart, type: Int) {
+        position1 =-1
+        lineChart.setScaleEnabled(true)
         lineChart.setScaleMinima(1.0f, 1.0f)
         lineChart.viewPortHandler.refresh(Matrix(), lineChart, true)
         // background color
@@ -763,13 +768,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                Log.d("tag>>>>>>", "$type --- ${value}")
+//                Log.d("tag>>>>>>", "$type --- ${if(mList1.size-1 > position1) mList1[++position1]?.substring(mList1[++position1].length-2,mList1[++position1].length) else ""}")
                 return when (type) {
-                    1 -> "${value.toInt()}日"
-                    2 -> "${value.toInt()}月"
+                    1 -> if(mList1.size-1 > position1) mList1[++position1]?.substring(mList1[++position1].length-2,mList1[++position1].length) else ""
+                    2 -> "${value.toInt()}"
                     3 -> "${if (value < 10) 0 + (value.toInt()) else value.toInt()}年"
-                    4 -> "${value.toInt()}时"
-                    else -> "${value.toInt()}日"
+                    4 -> "${value.toInt()}"
+                    else -> "${value.toInt()}"
                 }
             }
         })
@@ -788,7 +793,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             // axis range
             yAxis.axisMaximum = when (type) {
                 1 -> 600f
-                2 -> 6000f
+                2 -> 600f
                 3 -> 60000f
                 4 -> 60f
                 else -> 600f
@@ -816,29 +821,29 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             yAxis.setDrawLimitLinesBehindData(true)
             xAxis.setDrawLimitLinesBehindData(true)
         }
-        xAxis.axisMinimum = when (type) {
-            1 -> 7f
-            2 -> 1f
-            3 -> 11f
-            4 -> 24f
-            else -> 7f
-        }
-
-        xAxis.mAxisMaximum = when (type) {
-            1 -> 7f
-            2 -> 12f
-            3 -> 21f
-            4 -> 24f
-            else -> 7f
-        }
+//        xAxis.axisMinimum = when (type) {
+//            1 -> 7f
+//            2 -> 30f
+//            3 -> 11f
+//            4 -> 24f
+//            else -> 7f
+//        }
+//
+//        xAxis.mAxisMaximum = when (type) {
+//            1 -> 7f
+//            2 -> 12f
+//            3 -> 21f
+//            4 -> 24f
+//            else -> 7f
+//        }
         xAxis.labelCount = when (type) {
             1 -> 7
-            2 -> 12
-            3 -> 9
+            2 -> 30
             4 -> 24
             else -> 7
         }
-        // draw points over time
+
+                // draw points over time
         lineChart.animateX(1500)
 
         // get the legend (only possible after setting data)
