@@ -164,6 +164,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     fun getDataInfo() {
+        if (pageNum>2) return
         mApiViewModel.getList(pageNum, 10).observe(this, androidx.lifecycle.Observer {
 
             if (it != null) {
@@ -396,7 +397,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             } else {
                 isAuto = false
                 temp = 0
-                pageNum = total / 10 + 1
+//                pageNum = total / 10 + 1
+                pageNum = 2
                 getDataInfo()
             }
 //            startActivity(Intent(this, Main2Activity::class.java))
