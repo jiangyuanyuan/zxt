@@ -86,10 +86,10 @@ private constructor(builder: Builder, context: Context) :
      */
     private fun initEvent() {
         //设置取消按钮被点击后，向外界提供监听
-//        no.setOnClickListener {
-//            noOnclickListener?.invoke(this@ErrorDialog)
-//        }
-        mDelete?.setOnClickListener { dismiss() }
+        no.setOnClickListener {
+            noOnclickListener?.invoke(this@ErrorDialog)
+        }
+//        mDelete?.setOnClickListener { dismiss() }
     }
 
     /**

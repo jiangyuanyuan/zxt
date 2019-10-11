@@ -91,7 +91,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             }
             itmeView.tvShowImg.click {
-                showDialog(item.alarmPictureName)
+                showDialog(item.alarmPictureName, item.parse)
             }
         }, emptyList())
         recycleView.adapter = easyAdapter
@@ -129,12 +129,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-    fun getNewest(){
-        mApiViewModel.getNewest().observe(this,androidx.lifecycle.Observer {
-            if (it?.isNotEmpty()==true){
-                if (BigDecimal(it?.get(0)?.id)>newest){
+    fun getNewest() {
+        mApiViewModel.getNewest().observe(this, androidx.lifecycle.Observer {
+            if (it?.isNotEmpty() == true) {
+                if (BigDecimal(it?.get(0)?.id) > newest) {
                     if (isAuto == true) {
-                        showDialog(it?.get(0)?.alarmPictureName)
+                        showDialog(it?.get(0)?.alarmPictureName, it?.get(0)?.parse)
                     }
                     newest = BigDecimal(it?.get(0)?.id)
                     getDataInfo()
@@ -394,10 +394,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-    fun showDialog(string: String) {
+    fun showDialog(string: String, string2: String) {
 
         var dialog = ErrorDialog.Builder(this)
-            .message(string)
+            .message(string, string2)
             .setNegativeButton { dialog ->
                 dialog.dismiss()
             }.build()
