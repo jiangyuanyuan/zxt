@@ -202,10 +202,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                        }
                    }
 
-                    BarEntry(
-                        index?.toFloat(),
-                        sum ,
-                        resources.getDrawable(R.drawable.star)
+                    values.add(
+                        BarEntry(
+                            index.toFloat(),
+                            sum,
+                            resources.getDrawable(R.drawable.star)
+                        )
                     )
 
                 }
@@ -223,10 +225,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
                         }
                     }
-                    BarEntry(
-                        index?.toFloat(),
-                        sum ,
-                        resources.getDrawable(R.drawable.star)
+                    values.add(
+                        BarEntry(
+                            index.toFloat(),
+                            sum,
+                            resources.getDrawable(R.drawable.star)
+                        )
                     )
                 }
 
