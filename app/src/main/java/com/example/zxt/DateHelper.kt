@@ -12,7 +12,7 @@ public fun getDay(daySum:Int) :ArrayList<String>{
         val  calendar =Calendar. getInstance()
         calendar.add(Calendar.DATE, -temp) //向前走一天
         val date= calendar.time
-        arrayList.add(DateUtils.dateToString(date,DateUtils.FORMAT_SHORT_DD))
+        arrayList.add(DateUtils.dateToString(date,DateUtils.type1))
 
     }
     arrayList.reverse()
