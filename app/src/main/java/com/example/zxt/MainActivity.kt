@@ -238,8 +238,25 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             3 -> {
 
             }
-            4 -> {//24小时
+            4 -> {//24小时  2019101200
+                for(temp in 0..23){
+                    var sum = 0f
+                    list?.forEach { countBean->
+                        var value = countBean.day.substring(countBean.day.length - 2, countBean.day.length)
+                        if (BigDecimal(value) == BigDecimal(temp)){
+                            sum = countBean?.sum?.toFloat()
+                        }else{
 
+                        }
+                    }
+                    values.add(
+                        BarEntry(
+                            temp.toFloat(),
+                            sum,
+                            resources.getDrawable(R.drawable.star)
+                        )
+                    )
+                }
 
             }
 
