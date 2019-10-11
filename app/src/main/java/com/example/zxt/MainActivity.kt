@@ -6,6 +6,9 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.AbsoluteSizeSpan
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -13,23 +16,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
 import com.be.base.view.ErrorDialog
 import com.example.zxt.DateUtils.datePattern
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.model.GradientColor
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.utils.MPPointF
 import com.tezwez.base.helper.click
 import com.tezwez.base.helper.loge
 import com.tezwez.club.data.dto.CountBean
+import com.tezwez.club.data.dto.GetCaveat
 import com.tezwez.club.data.dto.MyData
 import com.tezwez.club.data.vm.ApiViewModel
 import io.reactivex.Observable
@@ -69,18 +74,24 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     var mList1 = mutableListOf<String>()
     var mList2 = mutableListOf<String>()
     var mList4 = mutableListOf<String>()
-
+    protected lateinit var tfRegular: Typeface
+    protected val errorType =
+        arrayOf("一级告警", "二级告警", "三级告警")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         tfLight = Typeface.createFromAsset(assets, "OpenSans-Light.ttf")
+        tfRegular = Typeface.createFromAsset(assets, "OpenSans-Regular.ttf")
         initRv()
         getDataInfo()
         initEvent()
         initReceiver()
         initChart1()
         initChart2()
+        initPieChart()
+        getData(1,0)
+        initEvent2()
     }
 
     fun initRv() {
@@ -394,7 +405,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 pageNum = total / 10 + 1
                 getDataInfo()
             }
-            startActivity(Intent(this, Main2Activity::class.java))
+//            startActivity(Intent(this, Main2Activity::class.java))
         }
         day.click {
             day.isSelected = true
@@ -669,4 +680,210 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         l.form = Legend.LegendForm.LINE
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    fun initEvent2(){
+        today.click {
+            getData(1,0) }
+
+        day7.click {
+            getData(7,0)
+        }
+
+        day30.click {
+            getData(30,0)
+        }
+    }
+    fun initPieChart(){
+        pieChart.setUsePercentValues(true)
+        pieChart.getDescription().setEnabled(true)
+        pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
+
+        pieChart.setDragDecelerationFrictionCoef(0.95f)
+        ////设置隐藏饼图上文字，只显示百分比
+        pieChart.setDrawSliceText(false)
+
+        pieChart.setCenterTextTypeface(tfLight)
+//        pieChart.setCenterText(generateCenterSpannableText())
+
+        pieChart.setDrawHoleEnabled(false)
+        pieChart.setHoleColor(Color.WHITE)
+
+        pieChart.setTransparentCircleColor(Color.WHITE)
+        pieChart.setTransparentCircleAlpha(110)
+
+        pieChart.setHoleRadius(58f)
+        pieChart.setTransparentCircleRadius(61f)
+
+        pieChart.setDrawCenterText(true)
+
+        pieChart.setRotationAngle(0f)
+        // enable rotation of the pieChart by touch
+        pieChart.setRotationEnabled(true)
+        pieChart.setHighlightPerTapEnabled(true)
+
+        // pieChart.setUnit(" €");
+        // pieChart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+//        pieChart.setOnChartValueSelectedListener(this)
+
+        pieChart.animateY(1400, Easing.EaseInOutQuad)
+        // pieChart.spin(2000, 0, 360);
+
+        //左上角的类型描述
+        val l = pieChart.getLegend()
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM)
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT)
+        l.setOrientation(Legend.LegendOrientation.VERTICAL)
+        l.setDrawInside(false)
+        l.formSize = 12f
+        l.textSize = 12f
+        l.setXEntrySpace(10f)
+        l.setYEntrySpace(10f)
+//        l.setYOffset(0f)
+
+        // entry label styling
+        pieChart.setEntryLabelColor(Color.RED)
+        pieChart.setEntryLabelTypeface(tfRegular)
+        pieChart.setEntryLabelTextSize(16f)
+    }
+    private fun generateCenterSpannableText(): SpannableString {
+        val s = SpannableString("")
+        s.setSpan(AbsoluteSizeSpan(14),0,s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return s
+    }
+    private fun setData(list : List<GetCaveat>) {
+        val entries = ArrayList<PieEntry>()
+
+        var total = list.sumBy { it.sum }
+
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (i in 0 until list.size) {
+            var data = list[i]
+            entries.add(
+                PieEntry(
+                    (data.sum * 100).toFloat() / total,
+                    errorType[data.caveatType -1],
+                    resources.getDrawable(R.drawable.star)
+                )
+            )
+        }
+
+        val dataSet = PieDataSet(entries, "")
+
+        dataSet.setDrawIcons(false)
+
+        dataSet.sliceSpace = 3f
+        dataSet.iconsOffset = MPPointF(0f, 40f)
+        dataSet.selectionShift = 5f
+
+        // add a lot of colors
+
+        val colors = ArrayList<Int>()
+
+        for (c in ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c)
+
+        for (c in ColorTemplate.JOYFUL_COLORS)
+            colors.add(c)
+
+        for (c in ColorTemplate.COLORFUL_COLORS)
+            colors.add(c)
+
+        for (c in ColorTemplate.LIBERTY_COLORS)
+            colors.add(c)
+
+        for (c in ColorTemplate.PASTEL_COLORS)
+            colors.add(c)
+
+        colors.add(ColorTemplate.getHoloBlue())
+
+        dataSet.colors = colors
+        //dataSet.setSelectionShift(0f);
+
+        val data = PieData(dataSet)
+        data.setValueFormatter(PercentFormatter(pieChart))
+        data.setValueTextSize(20f)
+        data.setValueTextColor(Color.RED)
+        data.setValueTypeface(tfLight)
+        pieChart.setData(data)
+
+        // undo all highlights
+        pieChart.highlightValues(null)
+
+        pieChart.invalidate()
+    }
+    fun getData(timeNumber:Int,type:Int){
+        if(timeNumber == 1){
+            today.isSelected = true
+            day7.isSelected = false
+            day30.isSelected = false
+        }else if(timeNumber == 7){
+            today.isSelected = false
+            day7.isSelected = true
+            day30.isSelected = false
+        }else if(timeNumber == 30){
+            today.isSelected = false
+            day7.isSelected = false
+            day30.isSelected = true
+        }
+        mApiViewModel.getCaveat(timeNumber,type).observe(this,androidx.lifecycle.Observer {
+            setData(it)
+        })
+    }
 }

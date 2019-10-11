@@ -114,8 +114,6 @@ class PieActivity : AppCompatActivity() {
         s.setSpan(AbsoluteSizeSpan(12),0,s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         return s
     }
-
-
     private fun setData(list : List<GetCaveat>) {
         val entries = ArrayList<PieEntry>()
 
@@ -178,9 +176,6 @@ class PieActivity : AppCompatActivity() {
 
         pieChart.invalidate()
     }
-
-
-
     fun getData(timeNumber:Int,type:Int){
         mApiViewModel.getCaveat(timeNumber,type).observe(this,androidx.lifecycle.Observer {
             setData(it)
