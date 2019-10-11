@@ -407,11 +407,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 //            year.isSelected = false
             mApiViewModel.getListByTimeHistory(7).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
-                    var num = 0
-                    for (data in it) {
-                        num = num + data.sum
-                    }
-//                    tvNumAll.text = "$num 次"
+
                     initTu(chart2, 1)
                     setData(chart2, it, 1)
                 }
@@ -421,13 +417,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             day.isSelected = false
             month.isSelected = true
 //            year.isSelected = false
-            mApiViewModel.getListByMonth(12).observe(this, androidx.lifecycle.Observer {
+            mApiViewModel.getListByDay30(30).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
-                    var num = 0
-                    for (data in it) {
-                        num = num + data.sum
-                    }
-//                    tvNumAll.text = "$num 次"
                     initTu(chart2, 2)
                     setData(chart2, it, 2)
                 }
