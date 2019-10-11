@@ -136,6 +136,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     fun initChart2() {
 //        initTu(chart2, 1)
         day.isSelected = true
+        month.isSelected = false
         mApiViewModel.getListByTimeHistory(7).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
                 initTu(chart2, 1)
