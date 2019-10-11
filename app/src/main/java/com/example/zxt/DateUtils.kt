@@ -18,6 +18,7 @@ object DateUtils {
      * 英文简写（默认）如：2010-12-01
      */
     var FORMAT_SHORT = "yyyy-MM-dd"
+    var FORMAT_SHORT_DD = "dd"
     /**
      * 英文全称 如：2010-12-01 23:15:06
      */

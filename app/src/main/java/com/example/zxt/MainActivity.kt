@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
 import com.be.base.view.ErrorDialog
+import com.example.zxt.DateUtils.FORMAT_SHORT
 import com.example.zxt.DateUtils.datePattern
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -48,6 +49,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     lateinit var easyAdapter: EasyAdapter<MyData>
@@ -197,102 +199,253 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     private fun setData(lineChart: BarChart, list: List<CountBean>, type: Int) {
         val values = ArrayList<BarEntry>()
-        var temp = 0
-        for (i in 0 until list.size) {
-            var data = list.get(i)
-            var sum = data.sum.toFloat()
-            var value = data.day.substring(data.day.length - 2, data.day.length)
-            if (type == 4) {
-                for (index in temp..24) {
-                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-                        values.add(
-                            BarEntry(
-                                (index + 1).toFloat(),
-                                0f,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                    } else if (BigDecimal(value) == BigDecimal(index)) {
-                        temp = value.toInt()
-                        values.add(
-                            BarEntry(
-                                value.toFloat(),
-                                sum,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                        break
-                    }
-                }
-            } else if (type == 1) {
-                for (index in temp..7) {
-                    //7日
-                    values.add(
-                        BarEntry(
-                            value.toFloat(),
-                            sum,
-                            resources.getDrawable(R.drawable.star)
-                        )
+
+        when (type) {
+            1 -> {
+                val day7list = getDay(7)
+                day7list?.forEachIndexed { index, str ->
+                    var sum = 0f
+                   list?.forEach { countBean->
+                       if (countBean?.day==str){
+                           sum = countBean?.sum?.toFloat()
+                       }else{
+
+                       }
+                   }
+
+                    BarEntry(
+                        index?.toFloat(),
+                        sum ,
+                        resources.getDrawable(R.drawable.star)
                     )
 
-
                 }
-
-            } else if (type == 2) {
-                //30日
-                for (index in temp..12) {
-                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-                        loge("$temp>-------->${(index + 1)}")
-                        values.add(
-                            BarEntry(
-                                (index + 1).toFloat(),
-                                0f,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
-                        loge("$temp==-------->${(value.toFloat())}")
-                        temp = value.toInt()
-                        values.add(
-                            BarEntry(
-                                value.toFloat(),
-                                sum,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                        break
-                    }
-                }
-            } else if (type == 3) {
-                //年
-                for (index in 11..21) {
-                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-                        Log.d("tag>>>>>>22", "$type --- ${(index + 1).toFloat()}")
-                        values.add(
-                            BarEntry(
-                                (index + 1).toFloat(),
-                                0f,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
-                        Log.d("tag>>>>>>33", "$type --- ${value.toFloat()}")
-                        values.add(
-                            BarEntry(
-                                value.toFloat(),
-                                sum,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                        break
-                    }
-                }
-
-//                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
 
             }
-//            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+            2 -> {
+
+                val day7list = getDay(30)
+                day7list?.forEachIndexed { index, str ->
+                    var sum = 0f
+                    list?.forEach { countBean->
+                        if (countBean?.day==str){
+                            sum = countBean?.sum?.toFloat()
+                        }else{
+
+                        }
+                    }
+                    BarEntry(
+                        index?.toFloat(),
+                        sum ,
+                        resources.getDrawable(R.drawable.star)
+                    )
+                }
+
+            }
+            3 -> {
+
+            }
+            4 -> {//24小时
+
+
+            }
+
+
+            //        var temp = 0
+            //        for (i in 0 until list.size) {
+            //            var data = list.get(i)
+            //            var sum = data.sum.toFloat()
+            //            var value = data.day.substring(data.day.length - 2, data.day.length)
+            //            if (type == 4) {
+            //                for (index in temp..24) {
+            //                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+            //                        values.add(
+            //                            BarEntry(
+            //                                (index + 1).toFloat(),
+            //                                0f,
+            //                                resources.getDrawable(R.drawable.star)
+            //                            )
+            //                        )
+            //                    } else if (BigDecimal(value) == BigDecimal(index)) {
+            //                        temp = value.toInt()
+            //                        values.add(
+            //                            BarEntry(
+            //                                value.toFloat(),
+            //                                sum,
+            //                                resources.getDrawable(R.drawable.star)
+            //                            )
+            //                        )
+            //                        break
+            //                    }
+            //                }
+            //            } else if (type == 1) {
+            //                for (index in temp..7) {
+            //                    //7日
+            //                    values.add(
+            //                        BarEntry(
+            //                            value.toFloat(),
+            //                            sum,
+            //                            resources.getDrawable(R.drawable.star)
+            //                        )
+            //                    )
+            //
+            //
+            //                }
+            //
+            //            } else if (type == 2) {
+            //                //30日
+            //                for (index in temp..12) {
+            //                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+            //                        loge("$temp>-------->${(index + 1)}")
+            //                        values.add(
+            //                            BarEntry(
+            //                                (index + 1).toFloat(),
+            //                                0f,
+            //                                resources.getDrawable(R.drawable.star)
+            //                            )
+            //                        )
+            //                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
+            //                        loge("$temp==-------->${(value.toFloat())}")
+            //                        temp = value.toInt()
+            //                        values.add(
+            //                            BarEntry(
+            //                                value.toFloat(),
+            //                                sum,
+            //                                resources.getDrawable(R.drawable.star)
+            //                            )
+            //                        )
+            //                        break
+            //                    }
+            //                }
+            //            } else if (type == 3) {
+            //                //年
+            //                for (index in 11..21) {
+            //                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+            //                        Log.d("tag>>>>>>22", "$type --- ${(index + 1).toFloat()}")
+            //                        values.add(
+            //                            BarEntry(
+            //                                (index + 1).toFloat(),
+            //                                0f,
+            //                                resources.getDrawable(R.drawable.star)
+            //                            )
+            //                        )
+            //                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
+            //                        Log.d("tag>>>>>>33", "$type --- ${value.toFloat()}")
+            //                        values.add(
+            //                            BarEntry(
+            //                                value.toFloat(),
+            //                                sum,
+            //                                resources.getDrawable(R.drawable.star)
+            //                            )
+            //                        )
+            //                        break
+            //                    }
+            //                }
+            //
+            ////                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+            //
+            //            }
+            ////            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+            //        }
         }
+
+
+//        var temp = 0
+//        for (i in 0 until list.size) {
+//            var data = list.get(i)
+//            var sum = data.sum.toFloat()
+//            var value = data.day.substring(data.day.length - 2, data.day.length)
+//            if (type == 4) {
+//                for (index in temp..24) {
+//                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+//                        values.add(
+//                            BarEntry(
+//                                (index + 1).toFloat(),
+//                                0f,
+//                                resources.getDrawable(R.drawable.star)
+//                            )
+//                        )
+//                    } else if (BigDecimal(value) == BigDecimal(index)) {
+//                        temp = value.toInt()
+//                        values.add(
+//                            BarEntry(
+//                                value.toFloat(),
+//                                sum,
+//                                resources.getDrawable(R.drawable.star)
+//                            )
+//                        )
+//                        break
+//                    }
+//                }
+//            } else if (type == 1) {
+//                for (index in temp..7) {
+//                    //7日
+//                    values.add(
+//                        BarEntry(
+//                            value.toFloat(),
+//                            sum,
+//                            resources.getDrawable(R.drawable.star)
+//                        )
+//                    )
+//
+//
+//                }
+//
+//            } else if (type == 2) {
+//                //30日
+//                for (index in temp..12) {
+//                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+//                        loge("$temp>-------->${(index + 1)}")
+//                        values.add(
+//                            BarEntry(
+//                                (index + 1).toFloat(),
+//                                0f,
+//                                resources.getDrawable(R.drawable.star)
+//                            )
+//                        )
+//                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
+//                        loge("$temp==-------->${(value.toFloat())}")
+//                        temp = value.toInt()
+//                        values.add(
+//                            BarEntry(
+//                                value.toFloat(),
+//                                sum,
+//                                resources.getDrawable(R.drawable.star)
+//                            )
+//                        )
+//                        break
+//                    }
+//                }
+//            } else if (type == 3) {
+//                //年
+//                for (index in 11..21) {
+//                    if (BigDecimal(value) > BigDecimal(index + 1)) {
+//                        Log.d("tag>>>>>>22", "$type --- ${(index + 1).toFloat()}")
+//                        values.add(
+//                            BarEntry(
+//                                (index + 1).toFloat(),
+//                                0f,
+//                                resources.getDrawable(R.drawable.star)
+//                            )
+//                        )
+//                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
+//                        Log.d("tag>>>>>>33", "$type --- ${value.toFloat()}")
+//                        values.add(
+//                            BarEntry(
+//                                value.toFloat(),
+//                                sum,
+//                                resources.getDrawable(R.drawable.star)
+//                            )
+//                        )
+//                        break
+//                    }
+//                }
+//
+////                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+//
+//            }
+////            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+//        }
 
         for (value in values) {
             Log.d("tag>>>>>>44", "$type --- ${value.x}")
@@ -342,23 +495,17 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         }
     }
 
+    public fun getDay(daySum: Int): ArrayList<String> {
+        val arrayList = ArrayList<String>()
+        for (temp in 1..daySum) {
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DATE, -temp) //向前走一天
+            val date = calendar.time
+            arrayList.add(DateUtils.dateToString(date, DateUtils.type1))
 
-    public fun getDay() {
-        val day = "2018-03-19"
-        val c = Calendar.getInstance()
-        var date: Date? = null
-        try {
-            date = SimpleDateFormat("yy-MM-dd").parse(day)
-        } catch (e: ParseException) {
-            e.printStackTrace()
         }
-        c.time = date
-        val day1 = c.get(Calendar.DATE)
-        c.set(Calendar.DATE, day1 - 1)
-
-        var dayAfter = SimpleDateFormat("yyyy-MM-dd").format(c.time)
-        println(dayAfter)
-
+        arrayList.reverse()
+        return arrayList
     }
 
 
