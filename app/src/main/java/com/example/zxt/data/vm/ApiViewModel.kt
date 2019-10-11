@@ -1,7 +1,6 @@
 package com.tezwez.club.data.vm
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zxt.data.api.DataObserver
 import com.example.zxt.data.repository.SingleLiveEvent
@@ -10,6 +9,7 @@ import com.tezwez.base.net.dto.Req
 import com.tezwez.club.data.api.Api
 import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.DataInfo
+import com.tezwez.club.data.dto.GetCaveat
 import com.tezwez.club.data.dto.MyData
 
 class ApiViewModel(private val api: Api) : ViewModel() {
@@ -20,6 +20,7 @@ class ApiViewModel(private val api: Api) : ViewModel() {
     val getCountHistory = SingleLiveEvent<List<CountBean>>()
     val getListByMonth = SingleLiveEvent<List<CountBean>>()
     val getListByYear = SingleLiveEvent<List<CountBean>>()
+    val getCaveat = SingleLiveEvent<List<GetCaveat>>()
 
 
 
@@ -124,4 +125,12 @@ class ApiViewModel(private val api: Api) : ViewModel() {
     }
 
 
+    fun getCaveat(timeNumber:Int,type:Int): LiveData<List<GetCaveat>> = let {
+        val req = Req()
+        req.putParams("timeNumber", timeNumber)
+        req.putParams("type",type)
+        api.getCaveat(req).compose(applySchedulersOnSingle())
+            .subscribe(DataObserver(getCaveat))
+        return getCaveat
+    }
 }

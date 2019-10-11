@@ -70,8 +70,8 @@ private constructor(builder: Builder, context: Context) :
         val window = this.window
         window?.setWindowAnimations(R.style.DialogAnimBottom)
         val params = window?.attributes
-        params?.width = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.width = (1280*2 / 3)
+        params?.height = (720 * 2 /3)
         window?.attributes = params
         this?.setCanceledOnTouchOutside(this.canCannel == true)
         //初始化界面数据
@@ -86,9 +86,10 @@ private constructor(builder: Builder, context: Context) :
      */
     private fun initEvent() {
         //设置取消按钮被点击后，向外界提供监听
-        no.setOnClickListener {
-            noOnclickListener?.invoke(this@ErrorDialog)
-        }
+//        no.setOnClickListener {
+//            noOnclickListener?.invoke(this@ErrorDialog)
+//        }
+        mDelete?.setOnClickListener { dismiss() }
     }
 
     /**

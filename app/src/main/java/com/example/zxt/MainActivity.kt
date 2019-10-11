@@ -3,8 +3,11 @@ package com.example.zxt
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.be.base.easy.EasyAdapter
@@ -88,7 +91,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             }
             itmeView.tvShowImg.click {
-                showDialog(item.alarmPictureName, item.parse)
+                showDialog(item.alarmPictureName)
             }
         }, emptyList())
         recycleView.adapter = easyAdapter
@@ -110,9 +113,9 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     fun initChart2() {
-        initTu(chart2, 1)
+//        initTu(chart2, 1)
         day.isSelected = true
-        mApiViewModel.getListByTimeHistory(22).observe(this, androidx.lifecycle.Observer {
+        mApiViewModel.getListByTimeHistory(30).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
                 var num = 0
                 for (data in it) {
@@ -126,12 +129,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-    fun getNewest() {
-        mApiViewModel.getNewest().observe(this, androidx.lifecycle.Observer {
-            if (it?.isNotEmpty() == true) {
-                if (BigDecimal(it?.get(0)?.id) > newest) {
+    fun getNewest(){
+        mApiViewModel.getNewest().observe(this,androidx.lifecycle.Observer {
+            if (it?.isNotEmpty()==true){
+                if (BigDecimal(it?.get(0)?.id)>newest){
                     if (isAuto == true) {
-                        showDialog(it?.get(0)?.alarmPictureName, it?.get(0)?.parse)
+                        showDialog(it?.get(0)?.alarmPictureName)
                     }
                     newest = BigDecimal(it?.get(0)?.id)
                     getDataInfo()
@@ -161,91 +164,71 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             }
             easyAdapter.submitList(mList)
+            if (mList.isNullOrEmpty()){
+                noDateTv.visibility = View.VISIBLE
+            }else {
+                noDateTv.visibility = View.GONE
+            }
+
+
         })
     }
-
     private fun setData(lineChart: BarChart, list: List<CountBean>, type: Int) {
         val values = ArrayList<BarEntry>()
         var temp = 0
         for (i in 0 until list.size) {
             var data = list.get(i)
             var sum = data.sum.toFloat()
-            var value = data.day.substring(data.day.length - 2, data.day.length)
-            if (type == 4) {
-                for (index in temp..24) {
-                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-                        values.add(
-                            BarEntry(
-                                (index + 1).toFloat(),
-                                0f,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                    } else if (BigDecimal(value) == BigDecimal(index)) {
+            var value = data.day.substring(data.day.length-2,data.day.length)
+            if(type == 4){
+                for (index in temp..24){
+                    if(BigDecimal(value)>BigDecimal(index+1)){
+                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(index)){
                         temp = value.toInt()
-                        values.add(
-                            BarEntry(
-                                value.toFloat(),
-                                sum,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
+                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
                         break
                     }
                 }
-            } else if (type == 1) {
+            }else if(type == 1){
                 //日
                 values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
-            } else if (type == 2) {
+            }else if(type == 2){
                 //月
-                for (index in temp..12) {
-                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-                        loge("$temp>-------->${(index + 1)}")
-                        values.add(
-                            BarEntry(
-                                (index + 1).toFloat(),
-                                0f,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
+                for (index in temp..12){
+                    if(BigDecimal(value)>BigDecimal(index+1)){
+                        loge("$temp>-------->${(index+1)}")
+                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(index+1)){
                         loge("$temp==-------->${(value.toFloat())}")
                         temp = value.toInt()
-                        values.add(
-                            BarEntry(
-                                value.toFloat(),
-                                sum,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
+                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
                         break
                     }
                 }
-            } else if (type == 3) {
+            }else if(type == 3){
                 //年
-                for (index in 10..30) {
-                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-                        values.add(
-                            BarEntry(
-                                (index + 1).toFloat(),
-                                0f,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
-                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
-                        values.add(
-                            BarEntry(
-                                value.toFloat(),
-                                sum,
-                                resources.getDrawable(R.drawable.star)
-                            )
-                        )
+                for (index in 11..21){
+                    if(BigDecimal(value)>BigDecimal(index+1)){
+                        Log.d("tag>>>>>>22","$type --- ${(index+1).toFloat()}")
+                        values.add(BarEntry((index+1).toFloat(), 0f, resources.getDrawable(R.drawable.star)))
+                    }else if(BigDecimal(value) == BigDecimal(index+1)){
+                        Log.d("tag>>>>>>33","$type --- ${value.toFloat()}")
+                        values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
                         break
                     }
                 }
+
+//                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
+
             }
 //            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
         }
+
+        for (value in values){
+            Log.d("tag>>>>>>44","$type --- ${value.x}")
+        }
+
         val set1: BarDataSet
 
         if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
@@ -284,16 +267,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             data.setValueTextSize(10f)
             data.setValueTypeface(tfLight)
             data.barWidth = 0.9f
-
-            data.setValueFormatter(object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    var str = value.toString()
-                    if (str.isEmpty()) {
-                        return str
-                    }
-                    return str.substring(0, str.indexOf("."))
-                }
-            })
 
             lineChart.data = data
             lineChart.setVisibleXRangeMaximum(30f)
@@ -343,12 +316,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 pageNum = total / 10 + 1
                 getDataInfo()
             }
+            startActivity(Intent(this, Main2Activity::class.java))
         }
         day.click {
             day.isSelected = true
             month.isSelected = false
-            year.isSelected = false
-            mApiViewModel.getListByTimeHistory(22).observe(this, androidx.lifecycle.Observer {
+//            year.isSelected = false
+            mApiViewModel.getListByTimeHistory(7).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
                     for (data in it) {
@@ -363,7 +337,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         month.click {
             day.isSelected = false
             month.isSelected = true
-            year.isSelected = false
+//            year.isSelected = false
             mApiViewModel.getListByMonth(12).observe(this, androidx.lifecycle.Observer {
                 if (it?.isEmpty()?.not() == true) {
                     var num = 0
@@ -376,22 +350,22 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             })
         }
-        year.click {
-            day.isSelected = false
-            month.isSelected = false
-            year.isSelected = true
-            mApiViewModel.getListByYear(10).observe(this, androidx.lifecycle.Observer {
-                if (it?.isEmpty()?.not() == true) {
-                    var num = 0
-                    for (data in it) {
-                        num = num + data.sum
-                    }
-                    tvNumAll.text = "$num"
-                    initTu(chart2, 3)
-                    setData(chart2, it, 3)
-                }
-            })
-        }
+//        year.click {
+//            day.isSelected = false
+//            month.isSelected = false
+//            year.isSelected = true
+//            mApiViewModel.getListByYear(10).observe(this, androidx.lifecycle.Observer {
+//                if (it?.isEmpty()?.not() == true) {
+//                    var num = 0
+//                    for (data in it) {
+//                        num = num + data.sum
+//                    }
+//                    tvNumAll.text = "$num"
+//                    initTu(chart2, 3)
+//                    setData(chart2, it, 3)
+//                }
+//            })
+//        }
         tvTitleClick.click {
             clicks++
             if (clicks > 7) {
@@ -420,10 +394,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-    fun showDialog(string: String, string2: String) {
+    fun showDialog(string: String) {
 
         var dialog = ErrorDialog.Builder(this)
-            .message(string, string2)
+            .message(string)
             .setNegativeButton { dialog ->
                 dialog.dismiss()
             }.build()
@@ -493,6 +467,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     private fun initTu(lineChart: BarChart, type: Int) {
+        lineChart.setScaleMinima(1.0f,1.0f)
+        lineChart.viewPortHandler.refresh(Matrix(),lineChart,true)
         // background color
         lineChart.setBackgroundColor(Color.WHITE)
         // disable description text
@@ -530,12 +506,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
+                Log.d("tag>>>>>>","$type --- ${value}")
                 return when (type) {
-                    1 -> "${value.toInt()}日"
+                    1 ->  "${value.toInt()}日"
                     2 -> "${value.toInt()}月"
-                    3 -> "${if (value < 10) 0 + (value.toInt()) else value.toInt()}年"
+                    3 -> "${if(value < 10) 0+(value.toInt()) else value.toInt()}年"
                     4 -> "${value.toInt()}时"
-                    else -> "${value.toInt()}日"
+                    else ->"${value.toInt()}日"
                 }
             }
         })
@@ -583,7 +560,28 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             yAxis.setDrawLimitLinesBehindData(true)
             xAxis.setDrawLimitLinesBehindData(true)
         }
-        xAxis.setLabelCount(6)
+        xAxis.axisMinimum = when(type){
+            1 -> 7f
+            2 -> 1f
+            3 -> 11f
+            4 -> 24f
+            else -> 7f
+        }
+
+        xAxis.mAxisMaximum = when(type){
+            1 -> 7f
+            2 -> 12f
+            3 -> 21f
+            4 -> 24f
+            else -> 7f
+        }
+        xAxis.labelCount = when(type){
+            1 -> 7
+            2 -> 12
+            3 -> 9
+            4 -> 24
+            else -> 7
+        }
         // draw points over time
         lineChart.animateX(1500)
 

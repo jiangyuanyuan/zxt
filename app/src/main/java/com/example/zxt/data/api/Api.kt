@@ -4,6 +4,7 @@ import com.tezwez.base.net.dto.Rep
 import com.tezwez.base.net.dto.Req
 import com.tezwez.club.data.dto.CountBean
 import com.tezwez.club.data.dto.DataInfo
+import com.tezwez.club.data.dto.GetCaveat
 import com.tezwez.club.data.dto.MyData
 import io.reactivex.Single
 import retrofit2.http.Body
@@ -32,5 +33,8 @@ interface Api {
 
     @POST("/mall/alarmMsg/getListByYear.do")
     fun getListByYear(@Body req: Req): Single<Rep<List<CountBean>>>
+
+    @POST("/mall/alarmMsg/getCaveat.do")
+    fun getCaveat(@Body req: Req): Single<Rep<List<GetCaveat>>>
 
 }
