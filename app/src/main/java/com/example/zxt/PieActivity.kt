@@ -41,6 +41,19 @@ class PieActivity : AppCompatActivity() {
 
     }
 
+    fun initEvent(){
+        day.click {
+            getData(1,0)
+        }
+        month.click {
+            getData(7,0)
+        }
+        year.click {
+            getData(30,0)
+        }
+    }
+
+
     fun initPieChart(){
         pieChart.setUsePercentValues(true)
         pieChart.getDescription().setEnabled(true)
@@ -166,17 +179,7 @@ class PieActivity : AppCompatActivity() {
         pieChart.invalidate()
     }
 
-    fun initEvent(){
-        day.click {
-            getData(1,0)
-        }
-        month.click {
-            getData(7,0)
-        }
-        year.click {
-            getData(30,0)
-        }
-    }
+
 
     fun getData(timeNumber:Int,type:Int){
         mApiViewModel.getCaveat(timeNumber,type).observe(this,androidx.lifecycle.Observer {
