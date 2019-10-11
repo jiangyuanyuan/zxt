@@ -20,7 +20,7 @@ public fun getDay(daySum:Int) :ArrayList<String>{
     arrayList.forEach{
         println(it)
     }
-
+    System.out.println(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
     return arrayList
 }
 

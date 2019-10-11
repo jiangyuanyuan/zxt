@@ -83,14 +83,15 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         tfLight = Typeface.createFromAsset(assets, "OpenSans-Light.ttf")
         tfRegular = Typeface.createFromAsset(assets, "OpenSans-Regular.ttf")
         initRv()
-        getDataInfo()
         initEvent()
+        initEvent2()
         initReceiver()
+        getDataInfo()
+        getToMouth()
         initChart1()
         initChart2()
-        initPieChart()
         getData(1,0)
-        initEvent2()
+        initPieChart()
     }
 
     fun initRv() {
@@ -136,11 +137,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         day.isSelected = true
         mApiViewModel.getListByTimeHistory(7).observe(this, androidx.lifecycle.Observer {
             if (it?.isEmpty()?.not() == true) {
-                var num = 0
-                for (data in it) {
-                    num = num + data.sum
-                }
-                tvNumAll.text = "$num"
                 initTu(chart2, 1)
                 setData(chart2, it, 1)
             }
@@ -157,6 +153,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                     }
                     newest = BigDecimal(it?.get(0)?.id)
                     getDataInfo()
+                    getToMouth()
+                    initChart1()
+                    initChart2()
+                    getData(1,0)
                 }
             }
         })
@@ -190,6 +190,20 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
 
 
+        })
+    }
+
+
+    fun getToMouth(){
+
+        mApiViewModel.getToMouth(BigDecimal(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toInt()).observe(this,androidx.lifecycle.Observer {
+            if (it.isNotEmpty()){
+                var num = 0
+                for (data in it) {
+                    num = num + data.sum
+                }
+                tvNumAll.text = "$num"
+            }
         })
     }
 
@@ -268,202 +282,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
             }
 
-
-            //        var temp = 0
-            //        for (i in 0 until list.size) {
-            //            var data = list.get(i)
-            //            var sum = data.sum.toFloat()
-            //            var value = data.day.substring(data.day.length - 2, data.day.length)
-            //            if (type == 4) {
-            //                for (index in temp..24) {
-            //                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-            //                        values.add(
-            //                            BarEntry(
-            //                                (index + 1).toFloat(),
-            //                                0f,
-            //                                resources.getDrawable(R.drawable.star)
-            //                            )
-            //                        )
-            //                    } else if (BigDecimal(value) == BigDecimal(index)) {
-            //                        temp = value.toInt()
-            //                        values.add(
-            //                            BarEntry(
-            //                                value.toFloat(),
-            //                                sum,
-            //                                resources.getDrawable(R.drawable.star)
-            //                            )
-            //                        )
-            //                        break
-            //                    }
-            //                }
-            //            } else if (type == 1) {
-            //                for (index in temp..7) {
-            //                    //7日
-            //                    values.add(
-            //                        BarEntry(
-            //                            value.toFloat(),
-            //                            sum,
-            //                            resources.getDrawable(R.drawable.star)
-            //                        )
-            //                    )
-            //
-            //
-            //                }
-            //
-            //            } else if (type == 2) {
-            //                //30日
-            //                for (index in temp..12) {
-            //                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-            //                        loge("$temp>-------->${(index + 1)}")
-            //                        values.add(
-            //                            BarEntry(
-            //                                (index + 1).toFloat(),
-            //                                0f,
-            //                                resources.getDrawable(R.drawable.star)
-            //                            )
-            //                        )
-            //                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
-            //                        loge("$temp==-------->${(value.toFloat())}")
-            //                        temp = value.toInt()
-            //                        values.add(
-            //                            BarEntry(
-            //                                value.toFloat(),
-            //                                sum,
-            //                                resources.getDrawable(R.drawable.star)
-            //                            )
-            //                        )
-            //                        break
-            //                    }
-            //                }
-            //            } else if (type == 3) {
-            //                //年
-            //                for (index in 11..21) {
-            //                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-            //                        Log.d("tag>>>>>>22", "$type --- ${(index + 1).toFloat()}")
-            //                        values.add(
-            //                            BarEntry(
-            //                                (index + 1).toFloat(),
-            //                                0f,
-            //                                resources.getDrawable(R.drawable.star)
-            //                            )
-            //                        )
-            //                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
-            //                        Log.d("tag>>>>>>33", "$type --- ${value.toFloat()}")
-            //                        values.add(
-            //                            BarEntry(
-            //                                value.toFloat(),
-            //                                sum,
-            //                                resources.getDrawable(R.drawable.star)
-            //                            )
-            //                        )
-            //                        break
-            //                    }
-            //                }
-            //
-            ////                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
-            //
-            //            }
-            ////            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
-            //        }
         }
 
 
-//        var temp = 0
-//        for (i in 0 until list.size) {
-//            var data = list.get(i)
-//            var sum = data.sum.toFloat()
-//            var value = data.day.substring(data.day.length - 2, data.day.length)
-//            if (type == 4) {
-//                for (index in temp..24) {
-//                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-//                        values.add(
-//                            BarEntry(
-//                                (index + 1).toFloat(),
-//                                0f,
-//                                resources.getDrawable(R.drawable.star)
-//                            )
-//                        )
-//                    } else if (BigDecimal(value) == BigDecimal(index)) {
-//                        temp = value.toInt()
-//                        values.add(
-//                            BarEntry(
-//                                value.toFloat(),
-//                                sum,
-//                                resources.getDrawable(R.drawable.star)
-//                            )
-//                        )
-//                        break
-//                    }
-//                }
-//            } else if (type == 1) {
-//                for (index in temp..7) {
-//                    //7日
-//                    values.add(
-//                        BarEntry(
-//                            value.toFloat(),
-//                            sum,
-//                            resources.getDrawable(R.drawable.star)
-//                        )
-//                    )
-//
-//
-//                }
-//
-//            } else if (type == 2) {
-//                //30日
-//                for (index in temp..12) {
-//                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-//                        loge("$temp>-------->${(index + 1)}")
-//                        values.add(
-//                            BarEntry(
-//                                (index + 1).toFloat(),
-//                                0f,
-//                                resources.getDrawable(R.drawable.star)
-//                            )
-//                        )
-//                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
-//                        loge("$temp==-------->${(value.toFloat())}")
-//                        temp = value.toInt()
-//                        values.add(
-//                            BarEntry(
-//                                value.toFloat(),
-//                                sum,
-//                                resources.getDrawable(R.drawable.star)
-//                            )
-//                        )
-//                        break
-//                    }
-//                }
-//            } else if (type == 3) {
-//                //年
-//                for (index in 11..21) {
-//                    if (BigDecimal(value) > BigDecimal(index + 1)) {
-//                        Log.d("tag>>>>>>22", "$type --- ${(index + 1).toFloat()}")
-//                        values.add(
-//                            BarEntry(
-//                                (index + 1).toFloat(),
-//                                0f,
-//                                resources.getDrawable(R.drawable.star)
-//                            )
-//                        )
-//                    } else if (BigDecimal(value) == BigDecimal(index + 1)) {
-//                        Log.d("tag>>>>>>33", "$type --- ${value.toFloat()}")
-//                        values.add(
-//                            BarEntry(
-//                                value.toFloat(),
-//                                sum,
-//                                resources.getDrawable(R.drawable.star)
-//                            )
-//                        )
-//                        break
-//                    }
-//                }
-//
-////                values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
-//
-//            }
-////            values.add(BarEntry(value.toFloat(), sum, resources.getDrawable(R.drawable.star)))
-//        }
+
 
         for (value in values) {
             Log.d("tag>>>>>>44", "$type --- ${value.x}")

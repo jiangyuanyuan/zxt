@@ -18,6 +18,7 @@ class ApiViewModel(private val api: Api) : ViewModel() {
 
     val getCount = SingleLiveEvent<List<CountBean>>()
     val getCountHistory = SingleLiveEvent<List<CountBean>>()
+    val getToMouth = SingleLiveEvent<List<CountBean>>()
     val getListByMonth = SingleLiveEvent<List<CountBean>>()
     val getListByYear = SingleLiveEvent<List<CountBean>>()
     val getCaveat = SingleLiveEvent<List<GetCaveat>>()
@@ -99,6 +100,19 @@ class ApiViewModel(private val api: Api) : ViewModel() {
             .subscribe(DataObserver(getCountHistory))
         return getCountHistory
     }
+
+    fun getToMouth(
+        timeNumber: Int? = null
+    ): LiveData<List<CountBean>> = let {
+        val req = Req()
+        if (timeNumber != null)
+            req.putParams("timeNumber", timeNumber)
+        req.putParams("sortType",1.toString())
+        api.getListByTime(req).compose(applySchedulersOnSingle())
+            .subscribe(DataObserver(getToMouth))
+        return getToMouth
+    }
+
 
     fun getListByMonth(
         timeNumber: Int? = null
