@@ -89,6 +89,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         getDataInfo()
         getToMouth()
         initChart1()
+//        initChart1()
         initChart2()
         getData(1,0)
         initPieChart()
@@ -177,7 +178,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 //                        initChart1()
 //                        newest = BigDecimal(it.list?.get(0)?.id)
 //                    }
-                    initChart1()
+//                    initChart1()
                     mList.clear()
                     mList.addAll(it?.list)
                 }
@@ -590,14 +591,22 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-//                Log.d("tag>>>>>>", "$type --- ${if(mList1.size-1 > position1) mList1[++position1]?.substring(mList1[++position1].length-2,mList1[++position1].length) else ""}")
+                ++position1
+                Log.d("tag>>>>>>", "$type ---$value----${if (mList1.size > value.toInt()) mList1[value.toInt()]?.substring(mList1[value.toInt()].length - 2, mList1[value.toInt()].length) else ""}")
                 return when (type) {
-                    1 -> if(mList1.size-1 > position1) mList1[++position1]?.substring(mList1[++position1].length-2,mList1[++position1].length) else ""
+                    1 -> {
+                        if (mList1.size > value.toInt()) mList1[value.toInt()]?.substring(
+                            mList1[value.toInt()].length - 2,
+                            mList1[value.toInt()].length
+                        ) else ""
+                    }
                     2 -> "${value.toInt()}"
                     3 -> "${if (value < 10) 0 + (value.toInt()) else value.toInt()}年"
                     4 -> "${value.toInt()}"
                     else -> "${value.toInt()}"
                 }
+                Log.d("tag>>>>>>", "$type --- ${if (mList1.size > position1) mList1[position1]?.substring(mList1[position1].length - 2, mList1[position1].length) else ""
+                }}")
             }
         })
         
