@@ -47,7 +47,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:background="#3271cb"
             android:layout_height="match_parent">
 
@@ -118,7 +118,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:background="#3271cb"
             android:layout_height="match_parent">
 

@@ -12,6 +12,12 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Custom implementation of the MarkerView.
  *
@@ -45,11 +51,13 @@ public class MyMarkerView extends MarkerView {
             switch (mType) {
                 case 1:
                     mFormat = "日";
-                    tvContent.setText(((int) e.getX())+ mFormat);
+                    List<String> list= getDay(7);
+                    tvContent.setText((list.get((int) e.getX())).substring((list.get((int) e.getX())).length()-2,(list.get((int) e.getX())).length()) + mFormat);
                     break;
                 case 2:
-                    mFormat = "月";
-                    tvContent.setText(((int) e.getX())+ mFormat);
+                    mFormat = "日";
+                    List<String> list2= getDay(30);
+                    tvContent.setText((list2.get((int) e.getX())).substring((list2.get((int) e.getX())).length()-2,(list2.get((int) e.getX())).length()) + mFormat);
                     break;
                 case 3:
                     mFormat = "年";
@@ -84,5 +92,19 @@ public class MyMarkerView extends MarkerView {
     public void setType(int type) {
         mType = type;
     }
+
+    public List<String> getDay(int daySum){
+        List arrayList = new ArrayList<String>();
+        for (int i = 0; i < daySum; i++) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, - i); //向前走一天
+            Date date = calendar.getTime();
+            arrayList.add(DateUtils.INSTANCE.dateToString(date, DateUtils.INSTANCE.getType1()));
+        }
+        Collections.reverse(arrayList);
+        return arrayList;
+    }
+
+
 
 }

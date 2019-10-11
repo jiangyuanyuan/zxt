@@ -343,7 +343,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     public fun getDay(daySum: Int): ArrayList<String> {
         val arrayList = ArrayList<String>()
-        for (temp in 1..daySum) {
+        for (temp in 0..daySum-1) {
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.DATE, -temp) //向前走一天
             val date = calendar.time
@@ -383,7 +383,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         }
         btnNext.click {
-            if (hasNextPage == true) {
+            if (hasNextPage == true && pageNum <= 2) {
                 isAuto = false
                 temp = 0
                 pageNum++
@@ -393,7 +393,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         }
         btnLast.click {
-            if (hasNextPage == false) {
+            if (hasNextPage == false && pageNum <= 2) {
                 toast("已经是最后一页了")
             } else {
                 isAuto = false
@@ -585,7 +585,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                ++position1
                 Log.d("tag>>>>>>", "$type ---$value----${if (mList1.size > value.toInt()) mList1[value.toInt()]?.substring(mList1[value.toInt()].length - 2, mList1[value.toInt()].length) else ""}")
                 return when (type) {
                     1 -> {
@@ -594,7 +593,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                             mList1[value.toInt()].length
                         ) else ""
                     }
-                    2 -> "${value.toInt()}"
+                    2 -> {if (mList2.size > value.toInt()) mList2[value.toInt()]?.substring(
+                        mList2[value.toInt()].length - 2,
+                        mList2[value.toInt()].length
+                    ) else ""}
                     3 -> "${if (value < 10) 0 + (value.toInt()) else value.toInt()}年"
                     4 -> "${value.toInt()}"
                     else -> "${value.toInt()}"
