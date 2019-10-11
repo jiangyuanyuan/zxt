@@ -522,8 +522,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 }
             }
         })
-
-
+        
         val yAxis: YAxis
         run {
             // // Y-Axis Style // //
