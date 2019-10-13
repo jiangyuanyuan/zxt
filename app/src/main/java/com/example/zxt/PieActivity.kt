@@ -123,13 +123,13 @@ class PieActivity : AppCompatActivity() {
         // the chart.
         for (i in 0 until list.size) {
             var data = list[i]
-            entries.add(
-                PieEntry(
-                    (data.sum * 100).toFloat() / total,
-                    errorType[data.caveatType -1],
-                    resources.getDrawable(R.drawable.star)
-                )
-            )
+//            entries.add(
+//                PieEntry(
+//                    (data.sum * 100).toFloat() / total,
+//                    errorType[data.caveatType -1],
+//                    resources.getDrawable(R.drawable.star)
+//                )
+//            )
         }
 
         val dataSet = PieDataSet(entries, "")

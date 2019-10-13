@@ -45,7 +45,7 @@ data class CountBean(
 
 
 data class GetCaveat(
-    val caveatType: Int,
+    val caveatType: String,
     val proportion: Any,
     val sum: Int
 )

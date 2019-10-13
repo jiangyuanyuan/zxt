@@ -580,7 +580,9 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             xAxis = lineChart.xAxis
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f)
-
+            xAxis.setDrawGridLines(false)
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
+            xAxis.setTextSize(5f)
         }
 
         xAxis.setValueFormatter(object : ValueFormatter() {
@@ -616,7 +618,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
             // horizontal grid lines
             yAxis.enableGridDashedLine(10f, 10f, 0f)
-
+            yAxis.setDrawGridLines(false)
             // axis range
             yAxis.axisMaximum = when (type) {
                 1 -> 600f
@@ -790,16 +792,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT)
         l.setOrientation(Legend.LegendOrientation.VERTICAL)
         l.setDrawInside(false)
-        l.formSize = 12f
-        l.textSize = 12f
-        l.setXEntrySpace(10f)
-        l.setYEntrySpace(10f)
+        l.formSize = 4f
+        l.textSize = 4f
+        l.setXEntrySpace(20f)
+        l.setYEntrySpace(4f)
 //        l.setYOffset(0f)
 
         // entry label styling
         pieChart.setEntryLabelColor(Color.RED)
         pieChart.setEntryLabelTypeface(tfRegular)
-        pieChart.setEntryLabelTextSize(16f)
+        pieChart.setEntryLabelTextSize(12f)
     }
     private fun generateCenterSpannableText(): SpannableString {
         val s = SpannableString("")
@@ -808,7 +810,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
     private fun setData(list : List<GetCaveat>) {
         val entries = ArrayList<PieEntry>()
-
         var total = list.sumBy { it.sum }
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
@@ -818,7 +819,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             entries.add(
                 PieEntry(
                     (data.sum * 100).toFloat() / total,
-                    errorType[data.caveatType -1],
+                    getErrorType(data.caveatType),
                     resources.getDrawable(R.drawable.star)
                 )
             )
@@ -858,7 +859,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter(pieChart))
-        data.setValueTextSize(20f)
+        data.setValueTextSize(10f)
         data.setValueTextColor(Color.RED)
         data.setValueTypeface(tfLight)
         pieChart.setData(data)
@@ -886,4 +887,25 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             setData(it)
         })
     }
+
+    fun getErrorType(type : String) : String {
+       return when (type) {
+           "-1"->"test"
+            "1" -> "未在指定时间休息"
+            "2" -> "未在指定区域监督"
+            "4" -> "厕所区域异常"
+            "8" -> "窗户区域异常"
+            "16" -> "高度异常"
+            "32" -> "非休息时间休息"
+            "64" -> "进入三角区域"
+            "128" -> "内务不整"
+            "512" -> "单人留仓"
+            "1024" -> "吊拉窗户"
+            "2048" -> "搭人梯"
+            "4096" -> "站被子上做板报"
+            else -> "其它"
+        }
+    }
+
+
 }
