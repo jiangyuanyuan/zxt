@@ -166,7 +166,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     fun getDataInfo() {
         if (pageNum>2) return
-        mApiViewModel.getList(pageNum, 10).observe(this, androidx.lifecycle.Observer {
+        mApiViewModel.getList(pageNum, 8).observe(this, androidx.lifecycle.Observer {
 
             if (it != null) {
                 hasNextPage = it.hasNextPage
@@ -383,7 +383,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         }
         btnNext.click {
-            if (hasNextPage == true && pageNum <= 2) {
+            if (hasNextPage == true && pageNum <= 3) {
                 isAuto = false
                 temp = 0
                 pageNum++
@@ -393,13 +393,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         }
         btnLast.click {
-            if (hasNextPage == false && pageNum <= 2) {
+            if (hasNextPage == false && pageNum <= 3) {
                 toast("已经是最后一页了")
             } else {
                 isAuto = false
                 temp = 0
 //                pageNum = total / 10 + 1
-                pageNum = 2
+                pageNum = 3
                 getDataInfo()
             }
 //            startActivity(Intent(this, Main2Activity::class.java))
