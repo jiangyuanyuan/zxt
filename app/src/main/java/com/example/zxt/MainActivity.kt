@@ -201,7 +201,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     fun getToMouth(){
 
         mApiViewModel.getToMouth(BigDecimal(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toInt()).observe(this,androidx.lifecycle.Observer {
-            if (it.isNotEmpty()){
+            if (it?.isNotEmpty() == true){
                 var num = 0
                 for (data in it) {
                     num = num + data.sum
@@ -364,6 +364,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     private fun initEvent() {
         btnFrist.click {
+//            CrashReport.testJavaCrash()
             if (hasPreviousPage == true) {
                 isAuto = false
                 temp = 0
@@ -885,7 +886,9 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             day30.isSelected = true
         }
         mApiViewModel.getCaveat(timeNumber,type).observe(this,androidx.lifecycle.Observer {
-            setData(it)
+            if(it != null && it?.isNotEmpty()) {
+                setData(it)
+            }
         })
     }
 
