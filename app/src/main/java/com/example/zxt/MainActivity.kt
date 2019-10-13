@@ -80,6 +80,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        tfLight.toString()
         tfLight = Typeface.createFromAsset(assets, "OpenSans-Light.ttf")
         tfRegular = Typeface.createFromAsset(assets, "OpenSans-Regular.ttf")
         initRv()
