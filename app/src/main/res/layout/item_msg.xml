@@ -15,7 +15,7 @@
             android:textSize="14sp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_height="wrap_content"
             tools:text="时间"
             />
@@ -65,7 +65,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_height="wrap_content"
             tools:text="原因"
             />
@@ -83,7 +83,7 @@
         android:layout_height="match_parent">
         <Button
             android:id="@+id/tvShowImg"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textColor="@color/color_333333"
             android:layout_width="0dp"
             android:layout_weight="1"

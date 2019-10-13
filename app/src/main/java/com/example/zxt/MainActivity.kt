@@ -785,7 +785,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         pieChart.animateY(1400, Easing.EaseInOutQuad)
         // pieChart.spin(2000, 0, 360);
-
+        pieChart.setExtraLeftOffset(30f)
         //左上角的类型描述
         val l = pieChart.getLegend()
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM)
@@ -794,7 +794,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         l.setDrawInside(false)
         l.formSize = 4f
         l.textSize = 4f
-        l.setXEntrySpace(20f)
+        l.setXEntrySpace(30f)
         l.setYEntrySpace(2f)
 //        l.setYOffset(0f)
 
