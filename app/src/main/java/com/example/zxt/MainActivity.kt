@@ -80,7 +80,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        tfLight.toString()
         tfLight = Typeface.createFromAsset(assets, "OpenSans-Light.ttf")
         tfRegular = Typeface.createFromAsset(assets, "OpenSans-Regular.ttf")
         initRv()
@@ -364,7 +363,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     private fun initEvent() {
         btnFrist.click {
-//            CrashReport.testJavaCrash()
             if (hasPreviousPage == true) {
                 isAuto = false
                 temp = 0
@@ -894,7 +892,6 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     fun getErrorType(type : String) : String {
        return when (type) {
-           "-1"->"test"
             "1" -> "未在指定时间休息"
             "2" -> "未在指定区域监督"
             "4" -> "厕所区域异常"
