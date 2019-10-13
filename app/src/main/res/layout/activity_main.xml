@@ -232,8 +232,10 @@
 
 
         <LinearLayout
+            android:background="@drawable/bg_ffffff_blue"
             android:layout_width="0dp"
             android:layout_weight="5"
+            android:layout_marginRight="5dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
@@ -373,7 +375,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycleView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
@@ -396,6 +398,7 @@
         </LinearLayout>
 
 <LinearLayout
+    android:background="@drawable/bg_ffffff_blue"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="2"
@@ -408,7 +411,6 @@
         android:background="#3271cb"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 

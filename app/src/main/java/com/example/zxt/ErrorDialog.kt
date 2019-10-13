@@ -4,18 +4,16 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
-import android.widget.Toast
-import com.example.zxt.R
 import com.orhanobut.hawk.Hawk
 import com.tezwez.base.helper.loadFromUrl
-
 import kotlinx.android.synthetic.main.dialog_one_text.*
+import me.jessyan.autosize.utils.AutoSizeUtils.dp2px
+
 
 class ErrorDialog
 /*  ---------------------------------- 构造方法 -------------------------------------  */
 private constructor(builder: Builder, context: Context) :
-    Dialog(context, R.style.LightProgressDialog) {
+    Dialog(context, com.example.zxt.R.style.LightProgressDialog) {
 
 
     private var messageStr: String?
@@ -63,15 +61,15 @@ private constructor(builder: Builder, context: Context) :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val view = View.inflate(context, R.layout.dialog_one_text, null)
+        val view = View.inflate(context, com.example.zxt.R.layout.dialog_one_text, null)
         setContentView(view)//自定义布局
         //按空白处不能取消动画
         //        setCanceledOnTouchOutside(false);
         val window = this.window
-        window?.setWindowAnimations(R.style.DialogAnimBottom)
+        window?.setWindowAnimations(com.example.zxt.R.style.DialogAnimBottom)
         val params = window?.attributes
-        params?.width = (1280*2 / 3)
-        params?.height = (720 * 2 /3)
+        params?.width = dp2px(context,1280f*2 / 3)
+        params?.height = dp2px(context,720f * 2 /3)
         window?.attributes = params
         this?.setCanceledOnTouchOutside(this.canCannel == true)
         //初始化界面数据

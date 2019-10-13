@@ -795,7 +795,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         l.formSize = 4f
         l.textSize = 4f
         l.setXEntrySpace(20f)
-        l.setYEntrySpace(4f)
+        l.setYEntrySpace(2f)
 //        l.setYOffset(0f)
 
         // entry label styling
