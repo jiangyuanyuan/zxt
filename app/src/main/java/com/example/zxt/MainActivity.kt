@@ -51,6 +51,7 @@ import kotlin.collections.ArrayList
 class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     lateinit var easyAdapter: EasyAdapter<MyData>
     var mList = mutableListOf<MyData>()
+    var mAllList = mutableListOf<MyData>()
     val mApiViewModel: ApiViewModel by viewModel()
     var pageNum = 1
 
@@ -89,9 +90,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         getDataInfo()
         getToMouth()
         initChart1()
-//        initChart1()
         initChart2()
-        getData(1,0)
+        getData(1, 0)
         initPieChart()
     }
 
@@ -158,33 +158,30 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                     getToMouth()
                     initChart1()
                     initChart2()
-                    getData(1,0)
+                    getData(1, 0)
                 }
             }
         })
     }
 
     fun getDataInfo() {
-        if (pageNum>2) return
-        mApiViewModel.getList(pageNum, 8).observe(this, androidx.lifecycle.Observer {
+        if (pageNum > 4) return
+        mApiViewModel.getList(1, 30).observe(this, androidx.lifecycle.Observer {
 
             if (it != null) {
-                hasNextPage = it.hasNextPage
-                hasPreviousPage = it.hasPreviousPage
-                total = it.total?.toInt()
                 if (!it.list.isEmpty()) {
-//                    if (BigDecimal(it.list?.get(0)?.id) > newest) {
-//                        if (isAuto == true) {
-//                            showDialog(it.list?.get(0)?.alarmPictureName)
-//                        }
-//                        initChart1()
-//                        newest = BigDecimal(it.list?.get(0)?.id)
-//                    }
-//                    initChart1()
-                    mList.clear()
-                    mList.addAll(it?.list)
+                    mAllList.clear()
+                    mAllList.addAll(it?.list)
+                    mAllList.sortBy { it.pictureType }
                 }
             }
+
+            mList.clear()
+            for (i in 8 * (pageNum - 1)..if (8 * pageNum < (mAllList.size - 1)) (8 * pageNum - 1) else (mAllList.size - 1)) {
+                if (i < mAllList.size)
+                    mList.add(mAllList[i])
+            }
+
             easyAdapter.submitList(mList)
             if (mList.isNullOrEmpty()) {
                 noDateTv.visibility = View.VISIBLE
@@ -197,17 +194,18 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-    fun getToMouth(){
+    fun getToMouth() {
 
-        mApiViewModel.getToMouth(BigDecimal(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toInt()).observe(this,androidx.lifecycle.Observer {
-            if (it?.isNotEmpty() == true){
-                var num = 0
-                for (data in it) {
-                    num = num + data.sum
+        mApiViewModel.getToMouth(BigDecimal(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toInt())
+            .observe(this, androidx.lifecycle.Observer {
+                if (it?.isNotEmpty() == true) {
+                    var num = 0
+                    for (data in it) {
+                        num = num + data.sum
+                    }
+                    tvNumAll.text = "$num"
                 }
-                tvNumAll.text = "$num"
-            }
-        })
+            })
     }
 
 
@@ -219,13 +217,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 val day7list = getDay(7)
                 day7list?.forEachIndexed { index, str ->
                     var sum = 0f
-                   list?.forEach { countBean->
-                       if (countBean?.day==str){
-                           sum = countBean?.sum?.toFloat()
-                       }else{
+                    list?.forEach { countBean ->
+                        if (countBean?.day == str) {
+                            sum = countBean?.sum?.toFloat()
+                        } else {
 
-                       }
-                   }
+                        }
+                    }
 
                     values.add(
                         BarEntry(
@@ -243,10 +241,10 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                 val day7list = getDay(30)
                 day7list?.forEachIndexed { index, str ->
                     var sum = 0f
-                    list?.forEach { countBean->
-                        if (countBean?.day==str){
+                    list?.forEach { countBean ->
+                        if (countBean?.day == str) {
                             sum = countBean?.sum?.toFloat()
-                        }else{
+                        } else {
 
                         }
                     }
@@ -264,13 +262,14 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
             }
             4 -> {//24小时  2019101200
-                for(temp in 0..23){
+                for (temp in 0..23) {
                     var sum = 0f
-                    list?.forEach { countBean->
-                        var value = countBean.day.substring(countBean.day.length - 2, countBean.day.length)
-                        if (BigDecimal(value) == BigDecimal(temp)){
+                    list?.forEach { countBean ->
+                        var value =
+                            countBean.day.substring(countBean.day.length - 2, countBean.day.length)
+                        if (BigDecimal(value) == BigDecimal(temp)) {
                             sum = countBean?.sum?.toFloat()
-                        }else{
+                        } else {
 
                         }
                     }
@@ -343,7 +342,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     public fun getDay(daySum: Int): ArrayList<String> {
         val arrayList = ArrayList<String>()
-        for (temp in 0..daySum-1) {
+        for (temp in 0..daySum - 1) {
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.DATE, -temp) //向前走一天
             val date = calendar.time
@@ -351,19 +350,20 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         }
         arrayList.reverse()
-        if(daySum == 7) {
+        if (daySum == 7) {
             mList1 = arrayList
-        }else if(daySum == 30){
+        } else if (daySum == 30) {
             mList2 = arrayList
         }
         return arrayList
     }
+
     override fun onNothingSelected() {}
     override fun onValueSelected(e: Entry?, h: Highlight?) {}
 
     private fun initEvent() {
         btnFrist.click {
-            if (hasPreviousPage == true) {
+            if (pageNum > 1) {
                 isAuto = false
                 temp = 0
                 pageNum = 1
@@ -373,7 +373,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         }
         btnPre.click {
-            if (hasPreviousPage == true) {
+            if (pageNum > 1) {
                 isAuto = false
                 temp = 0
                 pageNum--
@@ -383,7 +383,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         }
         btnNext.click {
-            if (hasNextPage == true && pageNum <= 3) {
+            if (pageNum <= 4) {
                 isAuto = false
                 temp = 0
                 pageNum++
@@ -393,13 +393,12 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             }
         }
         btnLast.click {
-            if (hasNextPage == false && pageNum <= 3) {
+            if (pageNum == 4) {
                 toast("已经是最后一页了")
             } else {
                 isAuto = false
                 temp = 0
-//                pageNum = total / 10 + 1
-                pageNum = 3
+                pageNum = 4
                 getDataInfo()
             }
 //            startActivity(Intent(this, Main2Activity::class.java))
@@ -489,18 +488,16 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
     fun getMyData(resType: String): String {
         return when (resType) {
-            "1" -> "未在指定时间休息"
-            "2" -> "未在指定区域监督"
-            "4" -> "厕所区域异常"
-            "8" -> "窗户区域异常"
-            "16" -> "高度异常"
-            "32" -> "非休息时间休息"
-            "64" -> "进入三角区域"
-            "128" -> "内务不整"
-            "512" -> "单人留仓"
-            "1024" -> "吊拉窗户"
-            "2048" -> "搭人梯"
-            "4096" -> "站被子上做板报"
+            "1" -> "靠墙"
+            "2" -> "摸高"
+            "4" -> "不学习"
+            "8" -> "不睡觉"
+            "16" -> "不放风"
+            "32" -> "多人"
+            "64" -> "提示信息"
+            "128" -> "厕所区域停留超时"
+            "256" -> "厕所区域多人"
+            "512" -> "无人"
             else -> getOther(resType)
         }
     }
@@ -513,19 +510,17 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             if (value == '1') {
                 loge("$resType --->>$index")
                 resu = when (string.toCharArray().size - index) {
-                    1 -> "未在指定时间休息"
-                    2 -> "未在指定区域监督"
-                    3 -> "厕所区域异常"
-                    4 -> "窗户区域异常"
-                    5 -> "高度异常"
-                    6 -> "非休息时间休息"
-                    7 -> "进入三角区域"
-                    8 -> "内务不整"
-                    10 -> "单人留仓"
-                    11 -> "吊拉窗户"
-                    12 -> "搭人梯"
-                    13 -> "站被子上做板报"
-                    else -> "未在指定时间休息"
+                    1 -> "靠墙"
+                    2 -> "摸高"
+                    3 -> "不学习"
+                    4 -> "不睡觉"
+                    5 -> "不放风"
+                    6 -> "多人"
+                    7 -> "提示信息"
+                    8 -> "厕所区域停留超时"
+                    9 -> "厕所区域多人"
+                    10 -> "无人"
+                    else -> "其他"
                 } + (if (resu.isNotEmpty()) ("+ $resu") else resu)
             }
         }
@@ -544,7 +539,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
     private fun initTu(lineChart: BarChart, type: Int) {
-        position1 =-1
+        position1 = -1
         lineChart.setScaleEnabled(true)
         lineChart.setScaleMinima(1.0f, 1.0f)
         lineChart.viewPortHandler.refresh(Matrix(), lineChart, true)
@@ -587,7 +582,13 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
 
         xAxis.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                Log.d("tag>>>>>>", "$type ---$value----${if (mList1.size > value.toInt()) mList1[value.toInt()]?.substring(mList1[value.toInt()].length - 2, mList1[value.toInt()].length) else ""}")
+                Log.d(
+                    "tag>>>>>>",
+                    "$type ---$value----${if (mList1.size > value.toInt()) mList1[value.toInt()]?.substring(
+                        mList1[value.toInt()].length - 2,
+                        mList1[value.toInt()].length
+                    ) else ""}"
+                )
                 return when (type) {
                     1 -> {
                         if (mList1.size > value.toInt()) mList1[value.toInt()]?.substring(
@@ -595,19 +596,27 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
                             mList1[value.toInt()].length
                         ) else ""
                     }
-                    2 -> {if (mList2.size > value.toInt()) mList2[value.toInt()]?.substring(
-                        mList2[value.toInt()].length - 2,
-                        mList2[value.toInt()].length
-                    ) else ""}
+                    2 -> {
+                        if (mList2.size > value.toInt()) mList2[value.toInt()]?.substring(
+                            mList2[value.toInt()].length - 2,
+                            mList2[value.toInt()].length
+                        ) else ""
+                    }
                     3 -> "${if (value < 10) 0 + (value.toInt()) else value.toInt()}年"
                     4 -> "${value.toInt()}"
                     else -> "${value.toInt()}"
                 }
-                Log.d("tag>>>>>>", "$type --- ${if (mList1.size > position1) mList1[position1]?.substring(mList1[position1].length - 2, mList1[position1].length) else ""
-                }}")
+                Log.d(
+                    "tag>>>>>>",
+                    "$type --- ${if (mList1.size > position1) mList1[position1]?.substring(
+                        mList1[position1].length - 2,
+                        mList1[position1].length
+                    ) else ""
+                    }}"
+                )
             }
         })
-        
+
         val yAxis: YAxis
         run {
             // // Y-Axis Style // //
@@ -672,7 +681,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             else -> 7
         }
 
-                // draw points over time
+        // draw points over time
         lineChart.animateX(1500)
 
         // get the legend (only possible after setting data)
@@ -683,73 +692,21 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    fun initEvent2(){
+    fun initEvent2() {
         today.click {
-            getData(1,0) }
+            getData(1, 0)
+        }
 
         day7.click {
-            getData(7,0)
+            getData(7, 0)
         }
 
         day30.click {
-            getData(30,0)
+            getData(30, 0)
         }
     }
-    fun initPieChart(){
+
+    fun initPieChart() {
         pieChart.setUsePercentValues(true)
         pieChart.getDescription().setEnabled(true)
         pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
@@ -792,8 +749,8 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT)
         l.setOrientation(Legend.LegendOrientation.VERTICAL)
         l.setDrawInside(false)
-        l.formSize = 4f
-        l.textSize = 4f
+        l.formSize = 8f
+        l.textSize = 8f
         l.setXEntrySpace(30f)
         l.setYEntrySpace(2f)
 //        l.setYOffset(0f)
@@ -803,17 +760,19 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
         pieChart.setEntryLabelTypeface(tfRegular)
         pieChart.setEntryLabelTextSize(12f)
     }
+
     private fun generateCenterSpannableText(): SpannableString {
         val s = SpannableString("")
-        s.setSpan(AbsoluteSizeSpan(14),0,s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        s.setSpan(AbsoluteSizeSpan(14), 0, s.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         return s
     }
-    private fun setData(list : List<GetCaveat>) {
+
+    private fun setData(list: List<GetCaveat>) {
         val entries = ArrayList<PieEntry>()
         var total = list.sumBy { it.sum }
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
+        // the chart. n  you shi  einid di  pao
         for (i in 0 until list.size) {
             var data = list[i]
             entries.add(
@@ -874,36 +833,34 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             today.isSelected = true
             day7.isSelected = false
             day30.isSelected = false
-        }else if(timeNumber == 7){
+        } else if (timeNumber == 7) {
             today.isSelected = false
             day7.isSelected = true
             day30.isSelected = false
-        }else if(timeNumber == 30){
+        } else if (timeNumber == 30) {
             today.isSelected = false
             day7.isSelected = false
             day30.isSelected = true
         }
-        mApiViewModel.getCaveat(timeNumber,type).observe(this,androidx.lifecycle.Observer {
-            if(it != null && it?.isNotEmpty()) {
+        mApiViewModel.getCaveat(timeNumber, type).observe(this, androidx.lifecycle.Observer {
+            if (it != null && it?.isNotEmpty()) {
                 setData(it)
             }
         })
     }
 
-    fun getErrorType(type : String) : String {
-       return when (type) {
-            "1" -> "未在指定时间休息"
-            "2" -> "未在指定区域监督"
-            "4" -> "厕所区域异常"
-            "8" -> "窗户区域异常"
-            "16" -> "高度异常"
-            "32" -> "非休息时间休息"
-            "64" -> "进入三角区域"
-            "128" -> "内务不整"
-            "512" -> "单人留仓"
-            "1024" -> "吊拉窗户"
-            "2048" -> "搭人梯"
-            "4096" -> "站被子上做板报"
+    fun getErrorType(type: String): String {
+        return when (type) {
+            "1" -> "靠墙"
+            "2" -> "摸高"
+            "4" -> "不学习"
+            "8" -> "不睡觉"
+            "16" -> "不放风"
+            "32" -> "多人"
+            "64" -> "提示信息"
+            "128" -> "厕所区域停留超时"
+            "256" -> "厕所区域多人"
+            "512" -> "无人"
             else -> "其它"
         }
     }
