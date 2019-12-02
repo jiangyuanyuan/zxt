@@ -98,7 +98,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     fun initRv() {
         recycleView.layoutManager = LinearLayoutManager(this)
         easyAdapter = EasyAdapter(R.layout.item_msg, { itmeView, position, item ->
-            itmeView.tvContent.text = getMyData(item.alarmType)
+            itmeView.tvContent.text = if(item?.warnName.isNullOrEmpty()) "其他" else item.warnName
             itmeView.tvTime.text = DateUtils.convertTimeToString(item.alarmTime, datePattern)
             when (item.pictureType) {
                 "1" -> {
@@ -778,7 +778,7 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
             entries.add(
                 PieEntry(
                     (data.sum * 100).toFloat() / total,
-                    getErrorType(data.caveatType),
+                    data.warnName?:"",
                     resources.getDrawable(R.drawable.star)
                 )
             )

@@ -35,7 +35,8 @@ data class MyData(
     val id: String,
     val parse: String,
     val pictureType: String,
-    val sensorid: String
+    val sensorid: String,
+    val warnName: String
 )
 
 data class CountBean(
@@ -47,7 +48,8 @@ data class CountBean(
 data class GetCaveat(
     val caveatType: String,
     val proportion: Any,
-    val sum: Int
+    val sum: Int,
+    val warnName: String
 )
 
 
