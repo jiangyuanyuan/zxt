@@ -362,6 +362,9 @@ class MainActivity : PermissionActivity(), OnChartValueSelectedListener {
     override fun onValueSelected(e: Entry?, h: Highlight?) {}
 
     private fun initEvent() {
+        mExit?.click {
+            System.exit(0)
+        }
         btnFrist.click {
             if (pageNum > 1) {
                 isAuto = false
